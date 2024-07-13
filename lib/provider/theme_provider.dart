@@ -47,9 +47,7 @@ class ThemeProvider with ChangeNotifier {
       primarySwatch: isLightTheme ? Colors.grey : Colors.grey,
       primaryColor: isLightTheme ? Colors.white : Color(0xFF222222),
       brightness: isLightTheme ? Brightness.light : Brightness.dark,
-      backgroundColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF222222),
-      scaffoldBackgroundColor:
-          isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF222222),
+      scaffoldBackgroundColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF222222),
     );
   }
 
@@ -62,21 +60,10 @@ class ThemeProvider with ChangeNotifier {
     return ThemeColor(
       textColor: isLightTheme ? Color(0xFF000000) : Color(0xFFFFFFFF),
       toggleButtonColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFf34323d),
-      toggleBackgroundColor:
-          isLightTheme ? Color(0xFFe7e7e8) : Color(0xFF222029),
+      toggleBackgroundColor: isLightTheme ? Color(0xFFe7e7e8) : Color(0xFF222029),
       shadow: [
-        if (isLightTheme)
-          BoxShadow(
-              color: Color(0xFFd8d7da),
-              spreadRadius: 5,
-              blurRadius: 10,
-              offset: Offset(0, 5)),
-        if (!isLightTheme)
-          BoxShadow(
-              color: Color(0x66000000),
-              spreadRadius: 5,
-              blurRadius: 10,
-              offset: Offset(0, 5))
+        if (isLightTheme) BoxShadow(color: Color(0xFFd8d7da), spreadRadius: 5, blurRadius: 10, offset: Offset(0, 5)),
+        if (!isLightTheme) BoxShadow(color: Color(0x66000000), spreadRadius: 5, blurRadius: 10, offset: Offset(0, 5))
       ],
       backgroundColor: Colors.transparent,
     );

@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.0
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -11,29 +11,32 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cached_network_image: ^3.0.0
+  cached_network_image: ^3.3.1
   webview_flutter: ^2.0.8
   http: ^0.13.3
   connectivity_plus: ^1.0.3
   shimmer: ^2.0.0
   hive: ^2.0.4
   provider: ^5.0.0
-  path_provider: ^2.0.2
+  path_provider: ^2.1.3
   transition: ^2.0.2
-  fluttertoast: ^8.0.8
+  fluttertoast: ^8.2.6
   url_launcher: ^6.0.12
-  share_plus: ^3.0.4
+  share_plus: ^9.0.0
   cupertino_icons: ^1.0.2
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
-  flutter_launcher_name: ^0.0.1
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
 
-flutter_launcher_name:
-  name: "NewsWipe"
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
 
 flutter:
   uses-material-design: true
   assets:
-    - images/
+    - assets/
+    - .env
