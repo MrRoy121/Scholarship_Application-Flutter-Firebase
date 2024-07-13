@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hive/hive.dart';
 import 'package:news_app/helper/menu_items.dart';
 import 'package:share_plus/share_plus.dart';
@@ -137,7 +138,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
             }),
           ),
           Container(
-            child: Center(child: CircularProgressIndicator()),
+            child: Center(child: SpinKitCubeGrid(color: Colors.blue,)),
           ),
         ],
       ),

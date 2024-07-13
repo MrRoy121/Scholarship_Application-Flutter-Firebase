@@ -1,12 +1,26 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive/hive.dart';
 import 'package:news_app/provider/theme_provider.dart';
 import 'package:news_app/screens/home_screen.dart';
+import 'package:news_app/screens/splash_screen.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: dotenv.env['API_KEY'].toString(),
+      authDomain: dotenv.env['AUTH_DOMAIN'].toString(),
+      projectId: dotenv.env['PROJECT_ID'].toString(),
+      storageBucket: dotenv.env['STORAGE_BUCKET'].toString(),
+      messagingSenderId: dotenv.env['MESSAGING_SENDER_ID'].toString(),
+      appId: dotenv.env['APP_ID'].toString(),
+    ),
+  );
   final appDirectory = await pathProvider.getApplicationDocumentsDirectory();
   Hive.init(appDirectory.path);
 
@@ -37,8 +51,9 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: themeProvider.themeData(),
-      home: HomeScreen(category: 'all'),
+      home: VideoSplashScreen(),
     );
   }
 }

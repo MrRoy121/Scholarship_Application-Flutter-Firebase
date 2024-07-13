@@ -2,19 +2,17 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:news_app/components/shimmer_news_tile.dart';
 import 'package:news_app/provider/theme_provider.dart';
-import 'package:news_app/screens/category_screen.dart';
 import 'package:news_app/components/news_tile.dart';
 import 'package:news_app/helper/news.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:transition/transition.dart';
+import 'dart:ui' as ui;
 
 class HomeScreen extends StatefulWidget {
-  final String category;
-  HomeScreen({required this.category});
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -24,11 +22,18 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _loading = true;
   bool _showConnected = false;
   bool _articleExists = true;
-  bool _retryBtnDisabled = false;
-
+  List<String> items = [
+    "All",
+    "Bachelor's Scholarship",
+    "Master's Scholarship",
+    "PHD Scholarship",
+    "With Ielts",
+    "Without Ielts"
+  ];
   Icon themeIcon = Icon(Icons.dark_mode);
   bool isLightTheme = false;
-
+  News newsClass = News();
+  bool showInfoButtons = false;
   Color baseColor = Colors.grey[300]!;
   Color highlightColor = Colors.grey[100]!;
 
@@ -87,9 +92,8 @@ class _HomeScreenState extends State<HomeScreen> {
   getNews() async {
     _loading = true;
     checkConnectivity();
-    News newsClass = News();
-    await newsClass.getNews(category: widget.category);
-    articles = newsClass.news;
+    await newsClass.getNews();
+    articles = newsClass.filterNewsByType('');
     setState(() {
       if (articles.isEmpty) {
         _articleExists = false;
@@ -97,7 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
         _articleExists = true;
       }
       _loading = false;
-      _retryBtnDisabled = false;
     });
   }
 
@@ -105,105 +108,160 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        systemOverlayStyle:
-            SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              Transition(
-                child: CategoryScreen(),
-                transitionEffect: TransitionEffect.LEFT_TO_RIGHT,
-              ),
-            );
-          },
-          icon: Icon(
-            Icons.amp_stories_outlined,
-            size: 30,
-          ),
-        ),
+        leading: Container(margin: EdgeInsets.only(left: 10), child: Image.asset('assets/logo.png')),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'News',
+              'Scholarship',
               style: TextStyle(color: Color(0xff50A3A4)),
             ),
             Text(
-              'Wipe',
+              'News',
               style: TextStyle(color: Color(0xffFCAF38)),
             ),
           ],
         ),
         actions: [
-          IconButton(
-            onPressed: () async {
-              await themeProvider.toggleThemeData();
+          InkWell(
+            onTap: () {
               setState(() {
-                themeIcon = themeProvider.themeIcon();
+                showInfoButtons = !showInfoButtons; // Toggle show/hide info buttons
               });
             },
-            icon: themeIcon,
+            child: Container(padding: EdgeInsets.all(2), child: Icon(Icons.info_outline),margin: !showInfoButtons? EdgeInsets.only(right: 10): EdgeInsets.zero,),
           ),
-        ],
-      ),
-      body: _loading
-          ? Shimmer.fromColors(
-              baseColor: baseColor,
-              highlightColor: highlightColor,
-              child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: 10,
-                itemBuilder: (BuildContext context, int index) {
-                  return ShimmerNewsTile();
-                },
-              ),
-            )
-          : _articleExists
-              ? RefreshIndicator(
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    itemCount: articles.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return NewsTile(
-                        image: articles[index].image,
-                        title: articles[index].title,
-                        content: articles[index].content,
-                        date: articles[index].publishedDate,
-                        fullArticle: articles[index].fullArticle,
-                      );
+          if (showInfoButtons)
+            Container(
+              margin: EdgeInsets.only(right: 10),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      await themeProvider.toggleThemeData();
+                      setState(() {
+                        themeIcon = themeProvider.themeIcon();
+                      });
                     },
-                  ),
-                  onRefresh: () => getNews(),
-                )
-              : Container(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("No data available"),
-                        TextButton(
-                          child: Text('Retry Now!'),
-                          onPressed: () {
-                            if (!_articleExists) {
-                              setState(() {
-                                _retryBtnDisabled = true;
-                              });
-                              getNews();
-                            }
-                          },
-                        ),
-                      ],
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      child: themeIcon,
                     ),
                   ),
-                ),
+                  Container(
+                    padding: EdgeInsets.all(2),
+                    child: Icon(Icons.facebook),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(2),
+                    child: Icon(Icons.facebook),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(2),
+                    child: Icon(Icons.facebook),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Container(
+            height: 60,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final text = items[index];
+                final textPainter = TextPainter(
+                  text: TextSpan(text: text, style: TextStyle(fontSize: 16)),
+                  maxLines: 1,
+                  textDirection: ui.TextDirection.ltr,
+                )..layout(minWidth: 0, maxWidth: double.infinity);
+                final textWidth = textPainter.size.width + 20;
+                return GestureDetector(
+                  onTap: () {
+                    if (index == 0) {
+                      articles = newsClass.filterNewsByType('');
+                    } else {
+                      articles = newsClass.filterNewsByType((index - 1).toString());
+                    }
+                    if (articles.isEmpty) {
+                      _articleExists = false;
+                    } else {
+                      _articleExists = true;
+                    }
+                    setState(() {});
+                  },
+                  child: Card(
+                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+                    child: Container(
+                      width: textWidth,
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      child: Center(
+                        child: Text(text),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          _loading
+              ? Expanded(
+                  child: Shimmer.fromColors(
+                    baseColor: baseColor,
+                    highlightColor: highlightColor,
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: 10,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ShimmerNewsTile();
+                      },
+                    ),
+                  ),
+                )
+              : _articleExists
+                  ? Expanded(
+                      child: RefreshIndicator(
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
+                          itemCount: articles.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return NewsTile(
+                              image: articles[index].image,
+                              title: articles[index].title,
+                              content: articles[index].content,
+                              date: DateFormat.yMMMd().format(articles[index].publishedDate),
+                              date1: DateFormat.yMMMd().format(articles[index].lastApplyDate),
+                              fullArticle: articles[index].fullArticle,
+                            );
+                          },
+                        ),
+                        onRefresh: () => getNews(),
+                      ),
+                    )
+                  : Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("No Scholarships available"),
+                        ],
+                      ),
+                    ),
+        ],
+      ),
     );
   }
 }

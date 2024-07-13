@@ -13,7 +13,6 @@ dependencies:
     sdk: flutter
   cached_network_image: ^3.3.1
   webview_flutter: ^2.0.8
-  http: ^0.13.3
   connectivity_plus: ^1.0.3
   shimmer: ^2.0.0
   hive: ^2.0.4
@@ -24,19 +23,27 @@ dependencies:
   url_launcher: ^6.0.12
   share_plus: ^9.0.0
   cupertino_icons: ^1.0.2
+  firebase_core: ^3.2.0
+  cloud_firestore: ^5.1.0
   flutter_dotenv: ^5.1.0
-
+  intl:
+  flutter_spinkit: ^5.2.1
+  lottie: ^3.1.2
+  video_player: ^2.3.7
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
 
 flutter_launcher_icons:
-  android: "launcher_icon"
+  android: true
   ios: true
+  image_path: "assets/logo.png"
+
 
 flutter:
   uses-material-design: true
   assets:
     - assets/
     - .env
+    - assets/logo.mp4

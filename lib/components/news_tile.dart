@@ -5,10 +5,11 @@ import 'package:news_app/screens/image_screen.dart';
 import 'package:transition/transition.dart';
 
 class NewsTile extends StatelessWidget {
-  final String image, title, content, date, fullArticle;
+  final String image, title, content, date, date1, fullArticle;
   NewsTile({
     required this.content,
     required this.date,
+    required this.date1,
     required this.image,
     required this.title,
     required this.fullArticle,
@@ -17,8 +18,7 @@ class NewsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6))),
+      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6))),
       margin: EdgeInsets.only(bottom: 24),
       width: MediaQuery.of(context).size.width,
       child: Container(
@@ -45,7 +45,7 @@ class NewsTile extends StatelessWidget {
                     fit: BoxFit.cover,
                     imageUrl: image,
                     placeholder: (context, url) => Image(
-                      image: AssetImage('images/dotted-placeholder.jpg'),
+                      image: AssetImage('assets/dotted-placeholder.jpg'),
                       height: 200,
                       width: MediaQuery.of(context).size.width,
                       fit: BoxFit.cover,
@@ -76,8 +76,7 @@ class NewsTile extends StatelessWidget {
                     ),
                     Text(
                       title,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                     ),
                     SizedBox(
                       height: 6,
@@ -92,8 +91,13 @@ class NewsTile extends StatelessWidget {
                     SizedBox(
                       height: 4,
                     ),
-                    Text(date,
-                        style: TextStyle(color: Colors.grey, fontSize: 12.0))
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Published Date: $date', style: TextStyle(color: Colors.grey, fontSize: 12.0)),
+                        Text("Deadline Date: $date1", style: TextStyle(color: Colors.grey, fontSize: 12.0))
+                      ],
+                    )
                   ],
                 ),
               ),

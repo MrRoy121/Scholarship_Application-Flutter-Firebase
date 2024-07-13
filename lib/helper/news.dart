@@ -1,41 +1,48 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:news_app/models/article_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class News {
-  List<ArticleModel> news = [];
+  List<ArticleModel> allnews = [];
+  Future<void> getNews() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference newsCollection = firestore.collection('news');
 
-  Future getNews({String? category}) async {
-    String kDailyhuntEndpoint =
-        'https://dailyhunt-api.vercel.app/dailyhunt?category=$category&items=30';
-    String kinshortsEndpoint =
-        'https://inshorts-api.vercel.app/shorts?category=$category';
+    Query query = newsCollection;
 
-    http.Client client = http.Client();
-    http.Response response = await client.get(Uri.parse(kinshortsEndpoint));
+    try {
+      QuerySnapshot querySnapshot = await query.get();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
-
-      if (jsonData['success'] == true) {
-        jsonData['data'].forEach((element) {
-          if (element['imageUrl'] != "" &&
-              element['content'] != "" &&
-              element['read_more_url'] != null) {
-            ArticleModel articleModel = ArticleModel(
-              publishedDate: element['date'].toString(),
-              publishedTime: element['time'].toString(),
-              image: element['img_url'].toString(),
-              content: element['content'].toString(),
-              fullArticle: element['read_more_url'].toString(),
-              title: element['title'].toString(),
-            );
-            news.add(articleModel);
-          }
-        });
-      } else {
-        print('ERROR');
+        if (data['imageUrl'] != "" &&
+            data['content'] != "" &&
+            data['read_more_url'] != null) {
+          List<String> types = List<String>.from(data['type']);
+          ArticleModel articleModel = ArticleModel(
+            lastApplyDate: data['lastApplyDate'].toDate(),
+            publishedDate: data['publishedDate'].toDate(),
+            country: data['country'],
+            type: types,
+            image: data['img_url'].toString(),
+            content: data['content'].toString(),
+            fullArticle: data['read_more_url'].toString(),
+            title: data['title'].toString(),
+          );
+          allnews.add(articleModel);
+        }
       }
+    } catch (e) {
+      print('ERROR: $e');
+    }
+  }
+
+  List<ArticleModel> filterNewsByType(String typeFilter) {
+    if(typeFilter == ''){
+      return allnews;
+    }else{
+      return allnews.where((article) => article.type.contains(typeFilter)).toList();
     }
   }
 }

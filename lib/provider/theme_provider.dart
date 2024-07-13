@@ -40,14 +40,13 @@ class ThemeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Global theme data we are always check if the light theme is enabled #isLightTheme
   ThemeData themeData() {
     return ThemeData(
       visualDensity: VisualDensity.adaptivePlatformDensity,
       primarySwatch: isLightTheme ? Colors.grey : Colors.grey,
       primaryColor: isLightTheme ? Colors.white : Color(0xFF222222),
       brightness: isLightTheme ? Brightness.light : Brightness.dark,
-      scaffoldBackgroundColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF222222),
+      scaffoldBackgroundColor: isLightTheme ? Color(0xFFE7E7E7) : Color(0xFF000000),
     );
   }
 
