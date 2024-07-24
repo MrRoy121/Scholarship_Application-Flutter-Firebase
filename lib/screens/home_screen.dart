@@ -7,6 +7,7 @@ import 'package:news_app/components/shimmer_news_tile.dart';
 import 'package:news_app/provider/theme_provider.dart';
 import 'package:news_app/components/news_tile.dart';
 import 'package:news_app/helper/news.dart';
+import 'package:news_app/screens/posting_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:transition/transition.dart';
@@ -28,7 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
     "Master's Scholarship",
     "PHD Scholarship",
     "With Ielts",
-    "Without Ielts"
+    "Without Ielts",
+    'Posting'
   ];
   Icon themeIcon = Icon(Icons.dark_mode);
   bool isLightTheme = false;
@@ -131,21 +133,31 @@ class _HomeScreenState extends State<HomeScreen> {
           InkWell(
             onTap: () {
               setState(() {
-                showInfoButtons = !showInfoButtons; // Toggle show/hide info buttons
+                showInfoButtons = !showInfoButtons;
               });
             },
-            child: Container(padding: EdgeInsets.all(2), child: Icon(Icons.info_outline),margin: !showInfoButtons? EdgeInsets.only(right: 10): EdgeInsets.zero,),
+            child: Container(
+              padding: EdgeInsets.all(2),
+              child: Icon(Icons.info_outline),
+              margin: !showInfoButtons ? EdgeInsets.only(right: 10) : EdgeInsets.zero,
+            ),
           ),
+        ],
+      ),
+      body: Column(
+        children: [
           if (showInfoButtons)
             Container(
-              margin: EdgeInsets.only(right: 10),
+              margin: EdgeInsets.symmetric(vertical: 10.0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InkWell(
                     onTap: () async {
-                      await themeProvider.toggleThemeData();
+                      // Implement your theme toggle functionality here
                       setState(() {
-                        themeIcon = themeProvider.themeIcon();
+                        themeIcon =
+                            themeIcon.icon == Icons.brightness_6 ? Icon(Icons.brightness_2) : Icon(Icons.brightness_6);
                       });
                     },
                     child: Container(
@@ -153,25 +165,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: themeIcon,
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(2),
-                    child: Icon(Icons.facebook),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(2),
-                    child: Icon(Icons.facebook),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(2),
-                    child: Icon(Icons.facebook),
-                  ),
+                  SizedBox(width: 10),
+                  Icon(Icons.facebook),
+                  SizedBox(width: 10),
+                  Icon(Icons.facebook),
+                  SizedBox(width: 10),
+                  Icon(Icons.facebook),
                 ],
               ),
             ),
-        ],
-      ),
-      body: Column(
-        children: [
           Container(
             height: 60,
             padding: EdgeInsets.symmetric(horizontal: 10),
@@ -188,7 +190,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 final textWidth = textPainter.size.width + 20;
                 return GestureDetector(
                   onTap: () {
-                    if (index == 0) {
+                    if (index == items.length - 1) {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserDetailsForm()));
+                    } else if (index == 0) {
                       articles = newsClass.filterNewsByType('');
                     } else {
                       articles = newsClass.filterNewsByType((index - 1).toString());
