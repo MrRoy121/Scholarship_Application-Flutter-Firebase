@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:news_app/components/shimmer_news_tile.dart';
@@ -12,6 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:transition/transition.dart';
 import 'dart:ui' as ui;
+
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -154,10 +157,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   InkWell(
                     onTap: () async {
-                      // Implement your theme toggle functionality here
+                      themeProvider.toggleThemeData();
                       setState(() {
-                        themeIcon =
-                            themeIcon.icon == Icons.brightness_6 ? Icon(Icons.brightness_2) : Icon(Icons.brightness_6);
+                        themeIcon = themeProvider.themeIcon();
                       });
                     },
                     child: Container(
@@ -166,11 +168,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Icon(Icons.facebook),
+                  InkWell(
+                    onTap: () async {
+                      launchUrl(Uri.parse("https://www.linkedin.com/in/rafiq-ullah-b59051319/"));
+                    },
+                    child: FaIcon(FontAwesomeIcons.linkedin),
+                  ),
                   SizedBox(width: 10),
-                  Icon(Icons.facebook),
+                  InkWell(
+                    onTap: () async {
+                      launchUrl(Uri.parse("https://web.facebook.com/abroadscholarships2024/"));
+                    },
+                    child: FaIcon(FontAwesomeIcons.facebook),
+                  ),
                   SizedBox(width: 10),
-                  Icon(Icons.facebook),
+                  InkWell(
+                    onTap: () async {
+                      launchUrl(Uri.parse("https://www.instagram.com/abroadscholarships2024/"));
+                    },
+                    child: FaIcon(FontAwesomeIcons.instagram),
+                  ),
+                  SizedBox(width: 10),
+                  InkWell(
+                    onTap: () async {
+                      launchUrl(Uri.parse("https://www.youtube.com/@8ballpoolreward"));
+                    },
+                    child: FaIcon(FontAwesomeIcons.youtube),
+                  ),
+                  SizedBox(width: 10),
+                  InkWell(
+                    onTap: () async {
+                      launchUrl(Uri.parse("https://chat.whatsapp.com/E0yxvNtklDHGwNy98NZj0B"));
+                    },
+                    child: FaIcon(FontAwesomeIcons.whatsapp),
+                  ),
                 ],
               ),
             ),

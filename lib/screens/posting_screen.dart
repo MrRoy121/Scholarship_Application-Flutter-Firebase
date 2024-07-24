@@ -34,7 +34,7 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Details Form'),
+        title: Text('Ask any question'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

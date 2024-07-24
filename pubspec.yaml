@@ -30,6 +30,8 @@ dependencies:
   flutter_spinkit: ^5.2.1
   lottie: ^3.1.2
   video_player: ^2.3.7
+  font_awesome_flutter: ^10.7.0
+
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_test:
