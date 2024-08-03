@@ -16,6 +16,9 @@ import 'dart:ui' as ui;
 
 import 'package:url_launcher/url_launcher.dart';
 
+import '../components/types_list.dart';
+import '../models/types_model.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -35,10 +38,9 @@ class _HomeScreenState extends State<HomeScreen> {
     "Without Ielts",
     'Posting'
   ];
-  Icon themeIcon = Icon(Icons.dark_mode);
+  IconData themeIcon = Icons.dark_mode;
   bool isLightTheme = false;
   News newsClass = News();
-  bool showInfoButtons = false;
   Color baseColor = Colors.grey[300]!;
   Color highlightColor = Colors.grey[100]!;
 
@@ -59,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       isLightTheme = settings.get('isLightTheme') ?? false;
       baseColor = isLightTheme ? Colors.grey[300]! : Color(0xff2c2c2c);
       highlightColor = isLightTheme ? Colors.grey[100]! : Color(0xff373737);
-      themeIcon = isLightTheme ? Icon(Icons.dark_mode) : Icon(Icons.light_mode);
+      themeIcon = isLightTheme ? Icons.dark_mode : Icons.light_mode;
     });
   }
 
@@ -109,6 +111,100 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  final List<TypesMode> typesList = [
+    TypesMode(
+      name: 'Fully Funded European Scholarship',
+      icon: FontAwesomeIcons.earthEurope,showNested: false,
+      backgroundColor: Colors.blue,
+      nestedTypes: [
+        NestedTypesMode(
+          name: 'Fully Funded Germany Scholarships',
+          icon: FontAwesomeIcons.schoolFlag,
+          backgroundColor: Colors.red,
+        ),
+        NestedTypesMode(
+          name: 'Fully Funded United Kingdom Scholarships',
+          icon: FontAwesomeIcons.buildingFlag,
+          backgroundColor: Colors.blue,
+        ),
+        NestedTypesMode(
+          name: 'Fully Funded France Scholarships',
+          icon:  FontAwesomeIcons.landmarkFlag,
+          backgroundColor: Colors.blue,
+        ),
+        NestedTypesMode(
+          name: 'Fully Funded Italy Scholarships',
+          icon: FontAwesomeIcons.flagCheckered,
+          backgroundColor: Colors.green,
+        ),
+        NestedTypesMode(
+          name: 'Fully Funded Finland Scholarships',
+          icon: FontAwesomeIcons.houseMedicalFlag,
+          backgroundColor: Colors.white,
+        ),
+        NestedTypesMode(
+          name: "Other's European Countries Scholarships",
+          icon: FontAwesomeIcons.flag,
+          backgroundColor: Colors.grey,
+        ),
+      ],
+    ),
+    TypesMode(
+      name: 'All Fully Funded Asian Countries Scholarship',
+      icon: FontAwesomeIcons.earthAsia,
+      backgroundColor: Colors.green,showNested: false,
+      nestedTypes: [
+        NestedTypesMode(
+          name: 'Fully Funded Malaysian Scholarships',
+          icon: FontAwesomeIcons.flagCheckered,
+          backgroundColor: Colors.yellow,
+        ),
+        NestedTypesMode(
+          name: 'Fully Funded Turkey Scholarships',
+          icon: FontAwesomeIcons.buildingFlag,
+          backgroundColor: Colors.red,
+        ),
+        NestedTypesMode(
+          name: 'Fully Funded Japan Scholarships',
+          icon: FontAwesomeIcons.landmarkFlag,
+          backgroundColor: Colors.white,
+        ),
+        NestedTypesMode(
+          name: "All other's Asian Countries Scholarships",
+          icon: FontAwesomeIcons.flag,
+          backgroundColor: Colors.grey,
+        ),
+      ],
+    ),
+    TypesMode(
+      name: 'All Fully Funded Gulf countries Scholarships',
+      icon: FontAwesomeIcons.globe,showNested: false,
+      backgroundColor: Colors.orange,
+      nestedTypes: [
+        NestedTypesMode(
+          name: 'Fully Funded Saudi Arabia Scholarships',
+          icon: FontAwesomeIcons.houseFlag,
+          backgroundColor: Colors.green,
+        ),
+        NestedTypesMode(
+          name: 'Fully Funded UAE Scholarships',
+          icon: FontAwesomeIcons.buildingFlag,
+          backgroundColor: Colors.black,
+        ),
+        NestedTypesMode(
+          name: 'Fully Funded Qatar Scholarships',
+          icon: FontAwesomeIcons.landmarkFlag,
+          backgroundColor: Colors.yellow,
+        ),
+        NestedTypesMode(
+          name: "All other's Gulf Countries Scholarships",
+          icon: FontAwesomeIcons.flag,
+          backgroundColor: Colors.grey,
+        ),
+      ],
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -123,178 +219,194 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Scholarship',
+              'All Latest ',
               style: TextStyle(color: Color(0xff50A3A4)),
             ),
             Text(
-              'News',
+              'Scholarships',
               style: TextStyle(color: Color(0xffFCAF38)),
             ),
           ],
         ),
-        actions: [
-          InkWell(
-            onTap: () {
-              setState(() {
-                showInfoButtons = !showInfoButtons;
-              });
-            },
-            child: Container(
-              padding: EdgeInsets.all(2),
-              child: Icon(Icons.info_outline),
-              margin: !showInfoButtons ? EdgeInsets.only(right: 10) : EdgeInsets.zero,
-            ),
-          ),
-        ],
       ),
       body: Column(
         children: [
-          if (showInfoButtons)
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () async {
-                      themeProvider.toggleThemeData();
-                      setState(() {
-                        themeIcon = themeProvider.themeIcon();
-                      });
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      child: themeIcon,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  InkWell(
-                    onTap: () async {
-                      launchUrl(Uri.parse("https://www.linkedin.com/in/rafiq-ullah-b59051319/"));
-                    },
-                    child: FaIcon(FontAwesomeIcons.linkedin),
-                  ),
-                  SizedBox(width: 10),
-                  InkWell(
-                    onTap: () async {
-                      launchUrl(Uri.parse("https://web.facebook.com/abroadscholarships2024/"));
-                    },
-                    child: FaIcon(FontAwesomeIcons.facebook),
-                  ),
-                  SizedBox(width: 10),
-                  InkWell(
-                    onTap: () async {
-                      launchUrl(Uri.parse("https://www.instagram.com/abroadscholarships2024/"));
-                    },
-                    child: FaIcon(FontAwesomeIcons.instagram),
-                  ),
-                  SizedBox(width: 10),
-                  InkWell(
-                    onTap: () async {
-                      launchUrl(Uri.parse("https://www.youtube.com/@8ballpoolreward"));
-                    },
-                    child: FaIcon(FontAwesomeIcons.youtube),
-                  ),
-                  SizedBox(width: 10),
-                  InkWell(
-                    onTap: () async {
-                      launchUrl(Uri.parse("https://chat.whatsapp.com/E0yxvNtklDHGwNy98NZj0B"));
-                    },
-                    child: FaIcon(FontAwesomeIcons.whatsapp),
-                  ),
+          Container(
+            margin: EdgeInsets.only(bottom: 5.0),
+            padding: EdgeInsets.symmetric(vertical: 5.0),
+            decoration: BoxDecoration(
+              border: Border.symmetric(horizontal: BorderSide(width: 0.5, color: const Color(0xFF0023FF))),
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFFFF3333),
+                  const Color(0xFFAD1E1E),
+                  const Color(0xFF1E31AD),
                 ],
               ),
             ),
-          Container(
-            height: 60,
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final text = items[index];
-                final textPainter = TextPainter(
-                  text: TextSpan(text: text, style: TextStyle(fontSize: 16)),
-                  maxLines: 1,
-                  textDirection: ui.TextDirection.ltr,
-                )..layout(minWidth: 0, maxWidth: double.infinity);
-                final textWidth = textPainter.size.width + 20;
-                return GestureDetector(
-                  onTap: () {
-                    if (index == items.length - 1) {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserDetailsForm()));
-                    } else if (index == 0) {
-                      articles = newsClass.filterNewsByType('');
-                    } else {
-                      articles = newsClass.filterNewsByType((index - 1).toString());
-                    }
-                    if (articles.isEmpty) {
-                      _articleExists = false;
-                    } else {
-                      _articleExists = true;
-                    }
-                    setState(() {});
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () async {
+                    themeProvider.toggleThemeData();
+                    setState(() {
+                      themeIcon = themeProvider.themeIcon();
+                    });
                   },
-                  child: Card(
-                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-                    child: Container(
-                      width: textWidth,
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: Center(
-                        child: Text(text),
-                      ),
+                  child: Container(
+                    padding: EdgeInsets.all(2),
+                    child: Icon(
+                      themeIcon,
+                      color: Theme.of(context).scaffoldBackgroundColor,
                     ),
                   ),
-                );
-              },
+                ),
+               SizedBox(width: 20),
+                InkWell(
+                  onTap: () async {
+                    launchUrl(Uri.parse("https://www.linkedin.com/in/rafiq-ullah-b59051319/"));
+                  },
+                  child: FaIcon(
+                    FontAwesomeIcons.linkedin,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
+               SizedBox(width: 20),
+                InkWell(
+                  onTap: () async {
+                    launchUrl(Uri.parse("https://web.facebook.com/abroadscholarships2024/"));
+                  },
+                  child: FaIcon(
+                    FontAwesomeIcons.facebook,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
+               SizedBox(width: 20),
+                InkWell(
+                  onTap: () async {
+                    launchUrl(Uri.parse("https://www.instagram.com/abroadscholarships2024/"));
+                  },
+                  child: FaIcon(
+                    FontAwesomeIcons.instagram,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
+               SizedBox(width: 20),
+                InkWell(
+                  onTap: () async {
+                    launchUrl(Uri.parse("https://www.youtube.com/@8ballpoolreward"));
+                  },
+                  child: FaIcon(
+                    FontAwesomeIcons.youtube,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
+               SizedBox(width: 20),
+                InkWell(
+                  onTap: () async {
+                    launchUrl(Uri.parse("https://chat.whatsapp.com/E0yxvNtklDHGwNy98NZj0B"));
+                  },
+                  child: FaIcon(
+                    FontAwesomeIcons.whatsapp,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
+              ],
             ),
           ),
-          _loading
-              ? Expanded(
-                  child: Shimmer.fromColors(
-                    baseColor: baseColor,
-                    highlightColor: highlightColor,
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 10,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ShimmerNewsTile();
-                      },
-                    ),
-                  ),
-                )
-              : _articleExists
-                  ? Expanded(
-                      child: RefreshIndicator(
-                        child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
-                          itemCount: articles.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return NewsTile(
-                              image: articles[index].image,
-                              title: articles[index].title,
-                              content: articles[index].content,
-                              date: DateFormat.yMMMd().format(articles[index].publishedDate),
-                              date1: DateFormat.yMMMd().format(articles[index].lastApplyDate),
-                              fullArticle: articles[index].fullArticle,
-                            );
-                          },
-                        ),
-                        onRefresh: () => getNews(),
-                      ),
-                    )
-                  : Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("No Scholarships available"),
-                        ],
-                      ),
-                    ),
+          TypesList(types: typesList),
+
+          // Container(
+          //   height: 60,
+          //   padding: EdgeInsets.symmetric(horizontal: 10),
+          //   child: ListView.builder(
+          //     scrollDirection: Axis.horizontal,
+          //     itemCount: items.length,
+          //     itemBuilder: (context, index) {
+          //       final text = items[index];
+          //       final textPainter = TextPainter(
+          //         text: TextSpan(text: text, style: TextStyle(fontSize: 16)),
+          //         maxLines: 1,
+          //         textDirection: ui.TextDirection.ltr,
+          //       )..layout(minWidth: 0, maxWidth: double.infinity);
+          //       final textWidth = textPainter.size.width + 20;
+          //       return GestureDetector(
+          //         onTap: () {
+          //           if (index == items.length - 1) {
+          //             Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserDetailsForm()));
+          //           } else if (index == 0) {
+          //             articles = newsClass.filterNewsByType('');
+          //           } else {
+          //             articles = newsClass.filterNewsByType((index - 1).toString());
+          //           }
+          //           if (articles.isEmpty) {
+          //             _articleExists = false;
+          //           } else {
+          //             _articleExists = true;
+          //           }
+          //           setState(() {});
+          //         },
+          //         child: Card(
+          //           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+          //           child: Container(
+          //             width: textWidth,
+          //             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          //             child: Center(
+          //               child: Text(text),
+          //             ),
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
+          // _loading
+          //     ? Expanded(
+          //         child: Shimmer.fromColors(
+          //           baseColor: baseColor,
+          //           highlightColor: highlightColor,
+          //           child: ListView.builder(
+          //             scrollDirection: Axis.vertical,
+          //             shrinkWrap: true,
+          //             physics: NeverScrollableScrollPhysics(),
+          //             itemCount: 10,
+          //             itemBuilder: (BuildContext context, int index) {
+          //               return ShimmerNewsTile();
+          //             },
+          //           ),
+          //         ),
+          //       )
+          //     : _articleExists
+          //         ? Expanded(
+          //             child: RefreshIndicator(
+          //               child: ListView.builder(
+          //                 scrollDirection: Axis.vertical,
+          //                 shrinkWrap: true,
+          //                 physics: ClampingScrollPhysics(),
+          //                 itemCount: articles.length,
+          //                 itemBuilder: (BuildContext context, int index) {
+          //                   return NewsTile(
+          //                     image: articles[index].image,
+          //                     title: articles[index].title,
+          //                     content: articles[index].content,
+          //                     date: DateFormat.yMMMd().format(articles[index].publishedDate),
+          //                     date1: DateFormat.yMMMd().format(articles[index].lastApplyDate),
+          //                     fullArticle: articles[index].fullArticle,
+          //                   );
+          //                 },
+          //               ),
+          //               onRefresh: () => getNews(),
+          //             ),
+          //           )
+          //         : Expanded(
+          //             child: Column(
+          //               mainAxisAlignment: MainAxisAlignment.center,
+          //               children: [
+          //                 Text("No Scholarships available"),
+          //               ],
+          //             ),
+          //           ),
         ],
       ),
     );

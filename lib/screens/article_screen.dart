@@ -93,14 +93,13 @@ class _ArticleScreenState extends State<ArticleScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'News',
+              'All Latest ',
               style: TextStyle(color: Color(0xff50A3A4)),
             ),
             Text(
-              'Wipe',
+              'Scholarships',
               style: TextStyle(color: Color(0xffFCAF38)),
             ),
-            SizedBox(width: 20),
           ],
         ),
         actions: <Widget>[

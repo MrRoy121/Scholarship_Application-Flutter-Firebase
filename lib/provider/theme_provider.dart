@@ -51,7 +51,7 @@ class ThemeProvider with ChangeNotifier {
   }
 
   themeIcon() {
-    return Icon(isLightTheme ? Icons.dark_mode : Icons.light_mode);
+    return isLightTheme ? Icons.dark_mode : Icons.light_mode;
   }
 
   // Theme mode to display unique properties not cover in theme data
