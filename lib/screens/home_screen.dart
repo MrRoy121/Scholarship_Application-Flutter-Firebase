@@ -9,6 +9,7 @@ import 'package:news_app/provider/theme_provider.dart';
 import 'package:news_app/components/news_tile.dart';
 import 'package:news_app/helper/news.dart';
 import 'package:news_app/screens/posting_screen.dart';
+import 'package:news_app/screens/questionList.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:transition/transition.dart';
@@ -35,8 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     "Master's Scholarship",
     "PHD Scholarship",
     "With Ielts",
-    "Without Ielts",
-    'Posting'
+    "Without Ielts"
   ];
   IconData themeIcon = Icons.dark_mode;
   bool isLightTheme = false;
@@ -111,103 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  final List<TypesMode> typesList = [
-    TypesMode(
-      name: 'Fully Funded European Scholarship',
-      icon: FontAwesomeIcons.earthEurope,showNested: false,
-      backgroundColor: Colors.blue,
-      nestedTypes: [
-        NestedTypesMode(
-          name: 'Fully Funded Germany Scholarships',
-          icon: FontAwesomeIcons.schoolFlag,
-          backgroundColor: Colors.red,
-        ),
-        NestedTypesMode(
-          name: 'Fully Funded United Kingdom Scholarships',
-          icon: FontAwesomeIcons.buildingFlag,
-          backgroundColor: Colors.blue,
-        ),
-        NestedTypesMode(
-          name: 'Fully Funded France Scholarships',
-          icon:  FontAwesomeIcons.landmarkFlag,
-          backgroundColor: Colors.blue,
-        ),
-        NestedTypesMode(
-          name: 'Fully Funded Italy Scholarships',
-          icon: FontAwesomeIcons.flagCheckered,
-          backgroundColor: Colors.green,
-        ),
-        NestedTypesMode(
-          name: 'Fully Funded Finland Scholarships',
-          icon: FontAwesomeIcons.houseMedicalFlag,
-          backgroundColor: Colors.white,
-        ),
-        NestedTypesMode(
-          name: "Other's European Countries Scholarships",
-          icon: FontAwesomeIcons.flag,
-          backgroundColor: Colors.grey,
-        ),
-      ],
-    ),
-    TypesMode(
-      name: 'All Fully Funded Asian Countries Scholarship',
-      icon: FontAwesomeIcons.earthAsia,
-      backgroundColor: Colors.green,showNested: false,
-      nestedTypes: [
-        NestedTypesMode(
-          name: 'Fully Funded Malaysian Scholarships',
-          icon: FontAwesomeIcons.flagCheckered,
-          backgroundColor: Colors.yellow,
-        ),
-        NestedTypesMode(
-          name: 'Fully Funded Turkey Scholarships',
-          icon: FontAwesomeIcons.buildingFlag,
-          backgroundColor: Colors.red,
-        ),
-        NestedTypesMode(
-          name: 'Fully Funded Japan Scholarships',
-          icon: FontAwesomeIcons.landmarkFlag,
-          backgroundColor: Colors.white,
-        ),
-        NestedTypesMode(
-          name: "All other's Asian Countries Scholarships",
-          icon: FontAwesomeIcons.flag,
-          backgroundColor: Colors.grey,
-        ),
-      ],
-    ),
-    TypesMode(
-      name: 'All Fully Funded Gulf countries Scholarships',
-      icon: FontAwesomeIcons.globe,showNested: false,
-      backgroundColor: Colors.orange,
-      nestedTypes: [
-        NestedTypesMode(
-          name: 'Fully Funded Saudi Arabia Scholarships',
-          icon: FontAwesomeIcons.houseFlag,
-          backgroundColor: Colors.green,
-        ),
-        NestedTypesMode(
-          name: 'Fully Funded UAE Scholarships',
-          icon: FontAwesomeIcons.buildingFlag,
-          backgroundColor: Colors.black,
-        ),
-        NestedTypesMode(
-          name: 'Fully Funded Qatar Scholarships',
-          icon: FontAwesomeIcons.landmarkFlag,
-          backgroundColor: Colors.yellow,
-        ),
-        NestedTypesMode(
-          name: "All other's Gulf Countries Scholarships",
-          icon: FontAwesomeIcons.flag,
-          backgroundColor: Colors.grey,
-        ),
-      ],
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -230,8 +137,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            height: 45,
             margin: EdgeInsets.only(bottom: 5.0),
             padding: EdgeInsets.symmetric(vertical: 5.0),
             decoration: BoxDecoration(
@@ -262,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-               SizedBox(width: 20),
+                SizedBox(width: 20),
                 InkWell(
                   onTap: () async {
                     launchUrl(Uri.parse("https://www.linkedin.com/in/rafiq-ullah-b59051319/"));
@@ -272,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Theme.of(context).scaffoldBackgroundColor,
                   ),
                 ),
-               SizedBox(width: 20),
+                SizedBox(width: 20),
                 InkWell(
                   onTap: () async {
                     launchUrl(Uri.parse("https://web.facebook.com/abroadscholarships2024/"));
@@ -282,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Theme.of(context).scaffoldBackgroundColor,
                   ),
                 ),
-               SizedBox(width: 20),
+                SizedBox(width: 20),
                 InkWell(
                   onTap: () async {
                     launchUrl(Uri.parse("https://www.instagram.com/abroadscholarships2024/"));
@@ -292,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Theme.of(context).scaffoldBackgroundColor,
                   ),
                 ),
-               SizedBox(width: 20),
+                SizedBox(width: 20),
                 InkWell(
                   onTap: () async {
                     launchUrl(Uri.parse("https://www.youtube.com/@8ballpoolreward"));
@@ -302,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Theme.of(context).scaffoldBackgroundColor,
                   ),
                 ),
-               SizedBox(width: 20),
+                SizedBox(width: 20),
                 InkWell(
                   onTap: () async {
                     launchUrl(Uri.parse("https://chat.whatsapp.com/E0yxvNtklDHGwNy98NZj0B"));
@@ -315,52 +224,82 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          TypesList(types: typesList),
-
-          // Container(
-          //   height: 60,
-          //   padding: EdgeInsets.symmetric(horizontal: 10),
-          //   child: ListView.builder(
-          //     scrollDirection: Axis.horizontal,
-          //     itemCount: items.length,
-          //     itemBuilder: (context, index) {
-          //       final text = items[index];
-          //       final textPainter = TextPainter(
-          //         text: TextSpan(text: text, style: TextStyle(fontSize: 16)),
-          //         maxLines: 1,
-          //         textDirection: ui.TextDirection.ltr,
-          //       )..layout(minWidth: 0, maxWidth: double.infinity);
-          //       final textWidth = textPainter.size.width + 20;
-          //       return GestureDetector(
-          //         onTap: () {
-          //           if (index == items.length - 1) {
-          //             Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserDetailsForm()));
-          //           } else if (index == 0) {
-          //             articles = newsClass.filterNewsByType('');
-          //           } else {
-          //             articles = newsClass.filterNewsByType((index - 1).toString());
-          //           }
-          //           if (articles.isEmpty) {
-          //             _articleExists = false;
-          //           } else {
-          //             _articleExists = true;
-          //           }
-          //           setState(() {});
-          //         },
-          //         child: Card(
-          //           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-          //           child: Container(
-          //             width: textWidth,
-          //             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          //             child: Center(
-          //               child: Text(text),
-          //             ),
-          //           ),
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
+          Container(
+            height: 60,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final text = items[index];
+                final textPainter = TextPainter(
+                  text: TextSpan(text: text, style: TextStyle(fontSize: 16)),
+                  maxLines: 1,
+                  textDirection: ui.TextDirection.ltr,
+                )..layout(minWidth: 0, maxWidth: double.infinity);
+                final textWidth = textPainter.size.width + 20;
+                return GestureDetector(
+                  onTap: () {
+                    if (index == 0) {
+                      articles = newsClass.filterNewsByType('');
+                    } else {
+                      articles = newsClass.filterNewsByType((index - 1).toString());
+                    }
+                    if (articles.isEmpty) {
+                      _articleExists = false;
+                    } else {
+                      _articleExists = true;
+                    }
+                    setState(() {});
+                  },
+                  child: Card(
+                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+                    child: Container(
+                      width: textWidth,
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      child: Center(
+                        child: Text(text),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Latest Post',
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 14),
+                ),
+                InkWell(
+                  onTap: () async {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserDetailsForm()));
+                  },
+                  child: FaIcon(
+                    FontAwesomeIcons.plus,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(height: 100, margin: const EdgeInsets.only(bottom: 10.0), child: QuestionList()),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              'Categories',
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 14),
+            ),
+          ),
+          Expanded(
+            child: TypesList(
+              types: typesList,
+            ),
+          ),
           // _loading
           //     ? Expanded(
           //         child: Shimmer.fromColors(
