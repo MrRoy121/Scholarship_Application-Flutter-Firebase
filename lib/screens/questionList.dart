@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:math';
@@ -47,10 +48,8 @@ class _QuestionListState extends State<QuestionList> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     for (var question in _questions) {
       question.likedByUser = prefs.getBool('liked_${question.id}') ?? false;
-    }
-    Future.delayed(Duration.zero, () {
       setState(() {});
-    });
+    }
   }
 
   Future<void> _toggleLike(UserQuestion question) async {
@@ -93,27 +92,29 @@ class _QuestionListState extends State<QuestionList> {
               .orderBy('timestamp', descending: true)
               .get(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            print(snapshot.error);
             if (!snapshot.hasData) {
               return Center(child: SpinKitDancingSquare(color: Colors.blue));
             }
 
             final comments = snapshot.data!.docs;
 
-            bool isKeyboard = MediaQuery.of(context).viewInsets.bottom>0;
+            bool isKeyboard = MediaQuery.of(context).viewInsets.bottom > 0;
             print(isKeyboard);
             return Column(
               children: [
-               if(!isKeyboard) Expanded(
-                  child: ListView.builder(
-                    itemCount: comments.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(comments[index]['comment']),
-                        subtitle: Text(comments[index]['timestamp'].toDate().toString()),
-                      );
-                    },
+                if (!isKeyboard)
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: comments.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(comments[index]['comment']),
+                          subtitle: Text(comments[index]['timestamp'].toDate().toString()),
+                        );
+                      },
+                    ),
                   ),
-                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: _buildCommentInputField(questionId),
@@ -139,7 +140,8 @@ class _QuestionListState extends State<QuestionList> {
         ),
         IconButton(
           icon: Icon(Icons.send),
-          onPressed: () {FocusManager.instance.primaryFocus?.unfocus();
+          onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
             _addComment(questionId, _commentController.text);
             _commentController.clear();
           },
@@ -233,7 +235,7 @@ class _QuestionListState extends State<QuestionList> {
         ),
         TextButton(
           onPressed: () {
-            // Implement share functionality
+            Share.share("Name :${question.name}, Question :${question.question}");
           },
           child: Row(
             children: [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/types_model.dart';
 import '../screens/All_Posting_Screen.dart';
+import '../screens/Message_WhatsappScreen.dart';
 import '../screens/NestedCategory_screen.dart';
 
 class TypesList extends StatelessWidget {
@@ -48,6 +49,14 @@ class TypesList extends StatelessWidget {
                           builder: (context) => AllPostingScreen(
                             country: '15',
                             typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (index == 6) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InstructionScreen(
                           ),
                         ),
                       );
