@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:math';
 
+import '../models/user_questions.dart';
+
 class QuestionList extends StatefulWidget {
   @override
   _QuestionListState createState() => _QuestionListState();
@@ -19,46 +21,36 @@ class _QuestionListState extends State<QuestionList> {
   void initState() {
     super.initState();
     _fetchQuestions();
-    Timer.periodic(Duration(seconds: 10), (Timer timer) {
-      if (_currentPage < _questions.length - 1) {
-        _currentPage++;
-      } else {
-        _currentPage = 0;
-      }
-
-      _pageController.animateToPage(
-        _currentPage,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
-    });
   }
 
   Future<void> _fetchQuestions() async {
     final QuerySnapshot result = await FirebaseFirestore.instance.collection('UserQuestion').get();
     final List<UserQuestion> questions = result.docs.map((doc) {
+      int likes = 0;
+      print(doc);
+      if (doc.data().toString().contains('likes')) {
+        likes = doc['likes'];
+      }
       return UserQuestion(
         id: doc.id,
         name: doc['name'],
         email: doc['email'],
         mobile: doc['mobile'],
         question: doc['question'],
-        likes: doc['likes'] ?? 0,
-        likedByUser: false, // Initially, we assume the user hasn't liked the post
+        likes: likes,
+        likedByUser: false,
       );
     }).toList();
 
     _questions = questions;
 
-    // Check for liked posts in SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     for (var question in _questions) {
       question.likedByUser = prefs.getBool('liked_${question.id}') ?? false;
     }
-
-    if (mounted) {
+    Future.delayed(Duration.zero, () {
       setState(() {});
-    }
+    });
   }
 
   Future<void> _toggleLike(UserQuestion question) async {
@@ -107,9 +99,11 @@ class _QuestionListState extends State<QuestionList> {
 
             final comments = snapshot.data!.docs;
 
+            bool isKeyboard = MediaQuery.of(context).viewInsets.bottom>0;
+            print(isKeyboard);
             return Column(
               children: [
-                Expanded(
+               if(!isKeyboard) Expanded(
                   child: ListView.builder(
                     itemCount: comments.length,
                     itemBuilder: (context, index) {
@@ -145,7 +139,7 @@ class _QuestionListState extends State<QuestionList> {
         ),
         IconButton(
           icon: Icon(Icons.send),
-          onPressed: () {
+          onPressed: () {FocusManager.instance.primaryFocus?.unfocus();
             _addComment(questionId, _commentController.text);
             _commentController.clear();
           },
@@ -157,14 +151,17 @@ class _QuestionListState extends State<QuestionList> {
   @override
   Widget build(BuildContext context) {
     return _questions.isEmpty
-        ? Center(child: SpinKitDancingSquare(color: Colors.blue,))
+        ? Center(
+            child: SpinKitDancingSquare(
+            color: Colors.blue,
+          ))
         : PageView.builder(
-      controller: _pageController,
-      itemCount: _questions.length,
-      itemBuilder: (context, index) {
-        return _buildQuestionCard(_questions[index]);
-      },
-    );
+            controller: _pageController,
+            itemCount: _questions.length,
+            itemBuilder: (context, index) {
+              return _buildQuestionCard(_questions[index]);
+            },
+          );
   }
 
   Widget _buildQuestionCard(UserQuestion question) {

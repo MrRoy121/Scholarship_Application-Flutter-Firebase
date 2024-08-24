@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,resizeToAvoidBottomInset: true,
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
         backgroundColor: Colors.transparent,
@@ -278,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          Container(height: 100, margin: const EdgeInsets.only(bottom: 10.0), child: QuestionList()),
+          Container(height:200, margin: const EdgeInsets.only(bottom: 10.0), child: QuestionList()),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Text(
