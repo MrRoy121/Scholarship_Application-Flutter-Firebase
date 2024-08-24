@@ -3,16 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
-import 'package:news_app/components/shimmer_news_tile.dart';
 import 'package:news_app/provider/theme_provider.dart';
-import 'package:news_app/components/news_tile.dart';
-import 'package:news_app/helper/news.dart';
+import 'package:news_app/screens/All_Posting_Screen.dart';
 import 'package:news_app/screens/posting_screen.dart';
 import 'package:news_app/screens/questionList.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:transition/transition.dart';
 import 'dart:ui' as ui;
 
 import 'package:url_launcher/url_launcher.dart';
@@ -25,22 +20,20 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+List<String> items = [
+  "All",
+  "With Ielts",
+  "Without Ielts"
+  "Bachelor's Scholarship",
+  "Master's Scholarship",
+  "PHD Scholarship",
+];
+
 class _HomeScreenState extends State<HomeScreen> {
-  List articles = [];
-  bool _loading = true;
   bool _showConnected = false;
-  bool _articleExists = true;
-  List<String> items = [
-    "All",
-    "Bachelor's Scholarship",
-    "Master's Scholarship",
-    "PHD Scholarship",
-    "With Ielts",
-    "Without Ielts"
-  ];
+
   IconData themeIcon = Icons.dark_mode;
   bool isLightTheme = false;
-  News newsClass = News();
   Color baseColor = Colors.grey[300]!;
   Color highlightColor = Colors.grey[100]!;
 
@@ -50,8 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Connectivity().onConnectivityChanged.listen((event) {
       checkConnectivity();
     });
-    _loading = true;
-    getNews();
     getTheme();
   }
 
@@ -92,23 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           backgroundColor: Colors.green);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      getNews();
     }
-  }
-
-  getNews() async {
-    _loading = true;
-    checkConnectivity();
-    await newsClass.getNews();
-    articles = newsClass.filterNewsByType('');
-    setState(() {
-      if (articles.isEmpty) {
-        _articleExists = false;
-      } else {
-        _articleExists = true;
-      }
-      _loading = false;
-    });
   }
 
   @override
@@ -241,16 +216,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 return GestureDetector(
                   onTap: () {
                     if (index == 0) {
-                      articles = newsClass.filterNewsByType('');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '',
+                            typess: '',
+                          ),
+                        ),
+                      );
                     } else {
-                      articles = newsClass.filterNewsByType((index - 1).toString());
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '',
+                            typess: (index - 1).toString(),
+                          ),
+                        ),
+                      );
                     }
-                    if (articles.isEmpty) {
-                      _articleExists = false;
-                    } else {
-                      _articleExists = true;
-                    }
-                    setState(() {});
                   },
                   child: Card(
                     margin: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
@@ -267,21 +252,27 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.only(left: 10, right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Latest Post',
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 14),
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.titleSmall?.color, fontWeight: FontWeight.w600, fontSize: 14),
                 ),
                 InkWell(
                   onTap: () async {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserDetailsForm()));
                   },
-                  child: FaIcon(
-                    FontAwesomeIcons.plus,
-                    color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.blue),
+                    child: FaIcon(
+                      FontAwesomeIcons.plus,
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      size: 18,
+                    ),
                   ),
                 ),
               ],
@@ -292,7 +283,8 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Text(
               'Categories',
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 14),
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.titleSmall?.color, fontWeight: FontWeight.w600, fontSize: 14),
             ),
           ),
           Expanded(
@@ -300,52 +292,6 @@ class _HomeScreenState extends State<HomeScreen> {
               types: typesList,
             ),
           ),
-          // _loading
-          //     ? Expanded(
-          //         child: Shimmer.fromColors(
-          //           baseColor: baseColor,
-          //           highlightColor: highlightColor,
-          //           child: ListView.builder(
-          //             scrollDirection: Axis.vertical,
-          //             shrinkWrap: true,
-          //             physics: NeverScrollableScrollPhysics(),
-          //             itemCount: 10,
-          //             itemBuilder: (BuildContext context, int index) {
-          //               return ShimmerNewsTile();
-          //             },
-          //           ),
-          //         ),
-          //       )
-          //     : _articleExists
-          //         ? Expanded(
-          //             child: RefreshIndicator(
-          //               child: ListView.builder(
-          //                 scrollDirection: Axis.vertical,
-          //                 shrinkWrap: true,
-          //                 physics: ClampingScrollPhysics(),
-          //                 itemCount: articles.length,
-          //                 itemBuilder: (BuildContext context, int index) {
-          //                   return NewsTile(
-          //                     image: articles[index].image,
-          //                     title: articles[index].title,
-          //                     content: articles[index].content,
-          //                     date: DateFormat.yMMMd().format(articles[index].publishedDate),
-          //                     date1: DateFormat.yMMMd().format(articles[index].lastApplyDate),
-          //                     fullArticle: articles[index].fullArticle,
-          //                   );
-          //                 },
-          //               ),
-          //               onRefresh: () => getNews(),
-          //             ),
-          //           )
-          //         : Expanded(
-          //             child: Column(
-          //               mainAxisAlignment: MainAxisAlignment.center,
-          //               children: [
-          //                 Text("No Scholarships available"),
-          //               ],
-          //             ),
-          //           ),
         ],
       ),
     );

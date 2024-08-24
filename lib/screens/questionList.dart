@@ -1,12 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-
-import '../models/user_questions.dart';
 
 class QuestionList extends StatefulWidget {
   @override
@@ -23,7 +20,7 @@ class _QuestionListState extends State<QuestionList> {
     super.initState();
     _fetchQuestions();
     Timer.periodic(Duration(seconds: 10), (Timer timer) {
-      if (_currentPage < _questions.length) {
+      if (_currentPage < _questions.length - 1) {
         _currentPage++;
       } else {
         _currentPage = 0;
@@ -39,33 +36,135 @@ class _QuestionListState extends State<QuestionList> {
 
   Future<void> _fetchQuestions() async {
     final QuerySnapshot result = await FirebaseFirestore.instance.collection('UserQuestion').get();
-    final List<UserQuestion> questions = result.docs
-        .map((doc) => UserQuestion(
-              name: doc['name'],
-              email: doc['email'],
-              mobile: doc['mobile'],
-              question: doc['question'],
-            ))
-        .toList();
+    final List<UserQuestion> questions = result.docs.map((doc) {
+      return UserQuestion(
+        id: doc.id,
+        name: doc['name'],
+        email: doc['email'],
+        mobile: doc['mobile'],
+        question: doc['question'],
+        likes: doc['likes'] ?? 0,
+        likedByUser: false, // Initially, we assume the user hasn't liked the post
+      );
+    }).toList();
 
     _questions = questions;
 
-      setState(() {
-      });
+    // Check for liked posts in SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    for (var question in _questions) {
+      question.likedByUser = prefs.getBool('liked_${question.id}') ?? false;
+    }
 
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> _toggleLike(UserQuestion question) async {
+    setState(() {
+      if (question.likedByUser) {
+        question.likes--;
+        question.likedByUser = false;
+      } else {
+        question.likes++;
+        question.likedByUser = true;
+      }
+    });
+
+    // Update Firestore
+    await FirebaseFirestore.instance.collection('UserQuestion').doc(question.id).update({
+      'likes': question.likes,
+    });
+
+    // Update SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('liked_${question.id}', question.likedByUser);
+  }
+
+  Future<void> _addComment(String questionId, String comment) async {
+    await FirebaseFirestore.instance.collection('UserQuestion').doc(questionId).collection('Comments').add({
+      'comment': comment,
+      'timestamp': Timestamp.now(),
+    });
+  }
+
+  void _showCommentsBottomSheet(BuildContext context, String questionId) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return FutureBuilder<QuerySnapshot>(
+          future: FirebaseFirestore.instance
+              .collection('UserQuestion')
+              .doc(questionId)
+              .collection('Comments')
+              .orderBy('timestamp', descending: true)
+              .get(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: SpinKitDancingSquare(color: Colors.blue));
+            }
+
+            final comments = snapshot.data!.docs;
+
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: comments.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(comments[index]['comment']),
+                        subtitle: Text(comments[index]['timestamp'].toDate().toString()),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _buildCommentInputField(questionId),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildCommentInputField(String questionId) {
+    TextEditingController _commentController = TextEditingController();
+
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _commentController,
+            decoration: InputDecoration(hintText: "Add a comment..."),
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.send),
+          onPressed: () {
+            _addComment(questionId, _commentController.text);
+            _commentController.clear();
+          },
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return _questions.isEmpty
-      ? Center(child: SpinKitDancingSquare(color: Colors.blue,))
-      : PageView.builder(
-          controller: _pageController,
-          itemCount: _questions.length,
-          itemBuilder: (context, index) {
-            return _buildQuestionCard(_questions[index]);
-          },
-        );
+        ? Center(child: SpinKitDancingSquare(color: Colors.blue,))
+        : PageView.builder(
+      controller: _pageController,
+      itemCount: _questions.length,
+      itemBuilder: (context, index) {
+        return _buildQuestionCard(_questions[index]);
+      },
+    );
   }
 
   Widget _buildQuestionCard(UserQuestion question) {
@@ -82,25 +181,72 @@ class _QuestionListState extends State<QuestionList> {
         color: randomColor.withOpacity(0.1),
         shadowColor: Colors.white,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Name: ${question.name}'),
+                  Text('Name: ${question.name}', style: TextStyle(fontWeight: FontWeight.bold)),
                   Text('Email: ${question.email}'),
                 ],
               ),
+              const SizedBox(height: 8.0),
               Text('Mobile: ${question.mobile}'),
-              Text('Question: ${question.question}'),
+              const SizedBox(height: 8.0),
+              Text('Question: ${question.question}', style: TextStyle(fontSize: 16.0)),
+              const SizedBox(height: 16.0),
+              _buildActionButtons(question), // Facebook-like action buttons
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildActionButtons(UserQuestion question) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                question.likedByUser ? Icons.thumb_up_alt : Icons.thumb_up_alt_outlined,
+                color: question.likedByUser ? Colors.blue : Colors.grey,
+              ),
+              onPressed: () => _toggleLike(question),
+            ),
+            Text('${question.likes}'),
+          ],
+        ),
+        TextButton(
+          onPressed: () {
+            _showCommentsBottomSheet(context, question.id);
+          },
+          child: Row(
+            children: [
+              Icon(Icons.comment, color: Colors.grey),
+              const SizedBox(width: 4.0),
+              Text('Comment', style: TextStyle(color: Colors.grey)),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            // Implement share functionality
+          },
+          child: Row(
+            children: [
+              Icon(Icons.share, color: Colors.grey),
+              const SizedBox(width: 4.0),
+              Text('Share', style: TextStyle(color: Colors.grey)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

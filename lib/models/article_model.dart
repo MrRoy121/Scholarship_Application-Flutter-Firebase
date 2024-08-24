@@ -1,6 +1,6 @@
 class ArticleModel {
   String title;
-  String country;
+  List<String> country;
   String image;
   String content;
   List<String> type;
@@ -18,3 +18,23 @@ class ArticleModel {
       required this.publishedDate,
       required this.title});
 }
+
+List<String> Contries = [
+  "Germany", //0
+  "United Kingdom", //1
+  "France", //2
+  "Italy", //3
+  "Finland", //4
+  "Europe Others", //5
+  "Malaysia", //6
+  "Turkey", //7
+  "Japan", //8
+  "Asia Others", //9
+  "Saudi Arab", //10
+  "UAE", //11
+  "Qatar", //12
+  "Gulf Others", //13
+  "China", //14
+  "USA", //15
+  "Australia" //16
+];

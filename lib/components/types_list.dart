@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/types_model.dart';
+import '../screens/All_Posting_Screen.dart';
 import '../screens/NestedCategory_screen.dart';
 
 class TypesList extends StatelessWidget {
@@ -30,12 +31,44 @@ class TypesList extends StatelessWidget {
                   ),
                   tileColor: type.backgroundColor.withOpacity(0.1),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NestedcategoryScreen(type: type),
-                      ),
-                    );
+                    if (index == 3) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '14',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    } else if (index == 4) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '15',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    } else if (index == 5) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '16',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NestedcategoryScreen(type: type),
+                        ),
+                      );
+                    }
                   },
                 ),
               ],

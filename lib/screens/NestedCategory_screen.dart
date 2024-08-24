@@ -4,16 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:news_app/models/types_model.dart';
 
-class NestedcategoryScreen extends StatefulWidget {
+import 'All_Posting_Screen.dart';
+import 'home_screen.dart';
+
+class NestedcategoryScreen extends StatelessWidget {
   NestedcategoryScreen({required this.type});
   TypesMode type;
-
-  @override
-  State<NestedcategoryScreen> createState() => _NestedcategoryScreenState();
-}
-
-class _NestedcategoryScreenState extends State<NestedcategoryScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,16 +21,16 @@ class _NestedcategoryScreenState extends State<NestedcategoryScreen> {
         centerTitle: false,
         leading: Container(margin: EdgeInsets.only(left: 10), child: Image.asset('assets/logo.png')),
         title: Text(
-          widget.type.name,
-          style: TextStyle(color: Color(0xffFCAF38), fontSize: 16),
+          type.name,
+          style: TextStyle(color: Color(0xffFCAF38), fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
       body: ListView.builder(
-        itemCount: widget.type.nestedTypes.length,
+        itemCount: type.nestedTypes.length,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          final nestedType = widget.type.nestedTypes[index];
+          final nestedType = type.nestedTypes[index];
           var borderRadius = BorderRadius.circular(5);
           final Color randomColor = Color.fromARGB(
             255,
@@ -51,10 +47,152 @@ class _NestedcategoryScreenState extends State<NestedcategoryScreen> {
                   leading: Icon(nestedType.icon, color: randomColor),
                   title: Text(
                     nestedType.name,
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: FontWeight.w400),
                   ),
                   tileColor: randomColor.withOpacity(0.1),
-                  onTap: () {},
+                  onTap: () {
+                    if (nestedType == typesList[0].nestedTypes[0]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '0',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[0].nestedTypes[1]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '1',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[0].nestedTypes[2]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '2',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[0].nestedTypes[3]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '3',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[0].nestedTypes[4]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '4',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[0].nestedTypes[5]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '5',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[1].nestedTypes[0]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '6',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[1].nestedTypes[1]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '7',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[1].nestedTypes[2]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '8',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[1].nestedTypes[3]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '9',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[2].nestedTypes[0]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '10',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[2].nestedTypes[1]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '11',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[2].nestedTypes[2]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '12',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }else if (nestedType == typesList[2].nestedTypes[3]) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: '13',
+                            typess: '',
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),
