@@ -5,15 +5,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:news_app/provider/theme_provider.dart';
 import 'package:news_app/screens/All_Posting_Screen.dart';
+import 'package:news_app/screens/login.screen.dart';
 import 'package:news_app/screens/posting_screen.dart';
 import 'package:news_app/screens/questionList.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:ui' as ui;
 
 import 'package:url_launcher/url_launcher.dart';
 
 import '../components/types_list.dart';
 import '../models/types_model.dart';
+import 'FacebookMockUpScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,6 +24,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 List<String> items = [
+  "Posts",
   "All",
   "With Ielts",
   "Without Ielts"
@@ -85,6 +89,17 @@ class _HomeScreenState extends State<HomeScreen> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
+
+  sharedPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    final user = prefs.getBool('user') ?? false;
+    if (user) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
+    }else{
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedScreen()));
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +230,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 final textWidth = textPainter.size.width + 20;
                 return GestureDetector(
                   onTap: () {
-                    if (index == 0) {
+                    if(index == 0){
+                      sharedPref();
+                    }else
+                    if (index == 1) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -231,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         MaterialPageRoute(
                           builder: (context) => AllPostingScreen(
                             country: '',
-                            typess: (index - 1).toString(),
+                            typess: (index - 2).toString(),
                           ),
                         ),
                       );
@@ -251,34 +269,6 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(left: 10, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Latest Post',
-                  style: TextStyle(
-                      color: Theme.of(context).textTheme.titleSmall?.color, fontWeight: FontWeight.w600, fontSize: 14),
-                ),
-                InkWell(
-                  onTap: () async {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserDetailsForm()));
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.blue),
-                    child: FaIcon(
-                      FontAwesomeIcons.plus,
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      size: 18,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(height:200, margin: const EdgeInsets.only(bottom: 10.0), child: QuestionList()),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Text(

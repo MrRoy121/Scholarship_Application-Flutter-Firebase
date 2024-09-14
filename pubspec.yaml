@@ -21,7 +21,7 @@ dependencies:
   transition: ^2.0.2
   fluttertoast: ^8.2.6
   url_launcher: ^6.0.12
-  share_plus: ^9.0.0
+  share_plus: ^10.0.2
   cupertino_icons: ^1.0.2
   firebase_core: ^3.2.0
   cloud_firestore: ^5.1.0
@@ -31,7 +31,12 @@ dependencies:
   lottie: ^3.1.2
   video_player: ^2.3.7
   font_awesome_flutter: ^10.7.0
-  shared_preferences: ^2.3.2
+  image_picker: ^0.8.4+9
+  flutter_reaction_button: ^3.0.0+2
+  firebase_storage: ^12.3.0
+  shared_preferences: ^2.0.0
+  firebase_auth: ^5.2.1
+  rolling_bottom_bar: ^0.2.2
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
