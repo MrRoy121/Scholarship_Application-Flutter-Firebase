@@ -8,7 +8,9 @@ import 'package:news_app/helper/menu_items.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
+import '../components/custom.snackbar.dart';
+import '../constants/colors.dart';
 
 class ArticleScreen extends StatefulWidget {
   final String articleUrl;
@@ -19,8 +21,7 @@ class ArticleScreen extends StatefulWidget {
 }
 
 class _ArticleScreenState extends State<ArticleScreen> {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
   int position = 1;
   bool _showConnected = false;
   bool isLightTheme = true;
@@ -137,7 +138,10 @@ class _ArticleScreenState extends State<ArticleScreen> {
             }),
           ),
           Container(
-            child: Center(child: SpinKitCubeGrid(color: Colors.blue,)),
+            child: Center(
+                child: SpinKitCubeGrid(
+              color: Colors.blue,
+            )),
           ),
         ],
       ),
@@ -147,12 +151,12 @@ class _ArticleScreenState extends State<ArticleScreen> {
   void choiceAction(String choice) {
     if (choice == MenuItems.Copy) {
       Clipboard.setData(ClipboardData(text: widget.articleUrl));
-      Fluttertoast.showToast(
-        msg: "Link Copied",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        fontSize: 16.0,
+
+      SnackUtil.showSnackBar(
+        context: context,
+        text: "Link Copied",
+        textColor: AppColors.creamColor,
+        backgroundColor: Colors.black54,
       );
     } else if (choice == MenuItems.Open_In_Browser) {
       launch(widget.articleUrl);

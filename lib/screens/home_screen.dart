@@ -94,9 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final prefs = await SharedPreferences.getInstance();
     final user = prefs.getBool('user') ?? false;
     if (user) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
-    }else{
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedScreen()));
+    }else{
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
     }
   }
 

@@ -154,15 +154,173 @@ class _CreatePostState extends State<CreatePost> {
 
     }
 
+    void _handleTextChange(String val) {
+      setState(() {
+        // Add your text length logic here
+        if (val.length > 100) {
+          fontsize = 16;
+        } else if (val.length > 50) {
+          fontsize = 22;
+        } else {
+          fontsize = 28;
+        }
+        selectedbg = val.length <= 50;
+      });
+    }
+
+    void _handleBackgroundChange(int index) {
+      setState(() {
+        bgnumber = index;
+        txtdark = index.isEven;
+        selectedbg = index != 0;
+      });
+    }
+    Widget _buildBackgroundSelector() {
+      return !stretch && bgcolor
+          ? Container(
+        height: 35,
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: background.length,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {
+                FocusScope.of(context).requestFocus(focausnode);
+                setState(() {
+                  _handleBackgroundChange(index);
+                });
+              },
+              child: Container(
+                width: 35,
+                margin: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  image: DecorationImage(
+                    image: AssetImage(background[index]),
+                    fit: BoxFit.cover,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 1,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      )
+          : const SizedBox();
+    }
+    Widget _buildOptionButton({required String text, required Color color, required icon}) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Row(
+          children: [
+            icon is String
+                ? Image.asset(icon, height: 12, width: 12)
+                : Icon(icon, color: color, size: 16),
+            const SizedBox(width: 5),
+            Text(text, style: TextStyle(fontSize: 12, color: color)),
+            Icon(Icons.arrow_drop_down_outlined, color: color, size: 16),
+          ],
+        ),
+      );
+    }
+
+    Widget _buildImageTile(int index) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          image: DecorationImage(
+            image: FileImage(selectedImages[index]),
+            fit: BoxFit.cover,
+          ),
+        ),
+        alignment: Alignment.topRight,
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              selectedImages.removeAt(index);
+              if (selectedImages.isEmpty) {
+                bgcolor = true;
+              }
+            });
+          },
+          child: const Icon(
+            Icons.cancel_outlined,
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
+
+
+    Widget _buildDivider() {
+      return Container(
+        width: double.infinity,
+        height: 0.4,
+        color: Colors.grey,
+        margin: const EdgeInsets.only(top: 10),
+      );
+    }
+    Widget _buildPostOption(String text, IconData icon, Color color, Function()? onTap) {
+      return InkWell(
+        onTap: onTap,
+        child: CreatePostItem(
+          cs: color,
+          ist: icon,
+          txt: text,
+        ),
+      );
+    }
+    Widget _buildPostOptions() {
+      return Column(
+        children: [
+          _buildDivider(),
+          _buildPostOption("Photo/Video", Icons.add_photo_alternate_outlined, Colors.green, getImages),
+          _buildDivider(),
+          _buildPostOption("Tag People", Icons.bookmark_border, Colors.blue, null),
+          _buildDivider(),
+          _buildPostOption("Feelings/Activity", Icons.tag_faces, Colors.orange, null),
+          _buildDivider(),
+          _buildPostOption("Check In", Icons.location_on_outlined, Colors.redAccent, null),
+          _buildDivider(),
+          bgcolor ? _buildPostOption("Live Video", Icons.video_call_outlined, Colors.red, null) : const SizedBox(),
+          bgcolor ? _buildDivider() : const SizedBox(),
+          bgcolor
+              ? _buildPostOption("Background Colour", Icons.text_fields, Colors.cyanAccent, () {
+            setState(() {
+              stretch = false;
+              FocusScope.of(context).requestFocus(focausnode);
+            });
+          })
+              : const SizedBox(),
+        ],
+      );
+    }
+
+
+
 
     return WillPopScope(
       onWillPop: (() => _onBackPressed(context)),
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            onPressed: () {_onBackPressed(context);
+            onPressed: () {
+              _onBackPressed(context);
             },
             icon: Icon(
               Icons.arrow_back_ios_new,
@@ -183,8 +341,9 @@ class _CreatePostState extends State<CreatePost> {
                 margin: EdgeInsets.all(10),
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                 decoration: BoxDecoration(
-                    color: Color(0xff0023ff),
-                    borderRadius: BorderRadius.circular(5)),
+                  color: Color(0xff0023ff),
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 child: const Text(
                   "POST",
                   style: TextStyle(color: Colors.white, fontSize: 14),
@@ -199,10 +358,11 @@ class _CreatePostState extends State<CreatePost> {
         ),
         body: processing
             ? Container(
-            color: Colors.white.withOpacity(0.5),
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ))
+          color: Colors.white.withOpacity(0.5),
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        )
             : Column(
           children: [
             Container(
@@ -218,15 +378,15 @@ class _CreatePostState extends State<CreatePost> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                        image: DecorationImage(
-                            image: NetworkImage(imgurl),
-                            fit: BoxFit.cover)),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                      image: DecorationImage(
+                        image: NetworkImage(imgurl),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+                  SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -238,95 +398,31 @@ class _CreatePostState extends State<CreatePost> {
                           color: Colors.black87,
                         ),
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
+                      SizedBox(height: 5),
                       Row(
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.blue.withOpacity(0.2)),
-                            child: Row(
-                              children: [
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Image.asset(
-                                  'assets/world.png',
-                                  height: 12,
-                                  width: 12,
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                const Text(
-                                  "Public",
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.blue),
-                                ),
-                                const Icon(
-                                  Icons.arrow_drop_down_outlined,
-                                  color: Colors.blue,
-                                ),
-                                const SizedBox(
-                                  width: 2,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.blue.withOpacity(0.2)),
-                            child: const Row(
-                              children: [
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Icon(
-                                  Icons.add,
-                                  color: Colors.blue,
-                                  size: 16,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "Album",
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.blue),
-                                ),
-                                Icon(
-                                  Icons.arrow_drop_down_outlined,
-                                  color: Colors.blue,
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                              ],
-                            ),
-                          )
+                          _buildOptionButton(
+                              icon: 'assets/world.png',
+                              text: 'Public',
+                              color: Colors.blue),
+                          SizedBox(width: 10),
+                          _buildOptionButton(
+                              icon: Icons.add, text: 'Album', color: Colors.blue),
                         ],
-                      )
+                      ),
                     ],
                   )
                 ],
               ),
             ),
-            Container(
+            Flexible(
+              child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                alignment:
-                selectedbg ? Alignment.center : Alignment.topLeft,
-                height: selectedbg ?250:fieldheight,
+                alignment: selectedbg ? Alignment.center : Alignment.topLeft,
+                height: selectedbg ? 250 : fieldheight,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(
-                      background[bgnumber],
-                    ),
+                    image: AssetImage(background[bgnumber]),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -342,385 +438,51 @@ class _CreatePostState extends State<CreatePost> {
                     });
                   },
                   onChanged: (val) {
-                    setState(() {
-                      if(val.length==22){
-                        if(expand1){
-                          fieldheight += 50;
-                          expand1 = false;
-                        }else{
-                          expand1 = true;
-                          fieldheight -= 50;
-                        }
-                      }else if(val.length==90){
-                        if(expand2){
-                          fieldheight += 50;
-                          expand2 = false;
-                        }else{
-                          expand2 = true;
-                          fieldheight -= 50;
-                        }
-                      }
-                      if (selectedbg) {
-                        if (val.length > 50) {
-                          fontsize = 22;
-                          bgcolor = false;
-                          selectedbg = false;
-                        } else {
-                          bgcolor = true;
-                          selectedbg = true;
-                        }
-                      } else {
-                        if (val.length > 100) {
-                          fontsize = 16;
-                        } else if (val.length > 50) {
-                          fontsize = 22;
-                          bgcolor = false;
-                          selectedbg = false;
-                        } else {
-                          fontsize = 28;
-                          bgcolor = true;
-                        }
-                      }
-                    });
+                    _handleTextChange(val);
                   },
                   focusNode: focausnode,
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'What\'s on your mind?',
-                      filled: true,
-                      fillColor:selectedbg?Colors.transparent:Colors.grey.shade50,
-                      hintStyle: TextStyle(
-                          color: txtdark ? Colors.black.withOpacity(0.5) : Colors.white.withOpacity(0.8))),
+                    border: InputBorder.none,
+                    hintText: "What's on your mind?",
+                    filled: true,
+                    fillColor: selectedbg
+                        ? Colors.transparent
+                        : Colors.grey.shade50,
+                    hintStyle: TextStyle(
+                        color: txtdark
+                            ? Colors.black.withOpacity(0.5)
+                            : Colors.white.withOpacity(0.8)),
+                  ),
                   style: TextStyle(
                       fontSize: fontsize,
                       fontWeight: FontWeight.bold,
                       color: txtdark ? Colors.black : Colors.white),
-                )),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                width: double.infinity,
-                child: selectedImages.isEmpty
-                    ? const Center(child: Text(''))
-                    : GridView.builder(
-                  itemCount: selectedImages.length,
-                  gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      margin: const EdgeInsets.all(6),
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        image: DecorationImage(
-                          image: FileImage(
-                            selectedImages[index],
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      alignment: Alignment.topRight,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedImages
-                                .remove(selectedImages[index]);
-                            if (selectedImages.length == 0) {
-                              bgcolor = true;
-                            }
-                          });
-                        },
-                        child: const Icon(
-                          Icons.cancel_outlined,
-                          color: Colors.white,
-                        ),
-                      ),
-                    );
-                  },
                 ),
               ),
             ),
-            !stretch && bgcolor
-                ? Container(
-              width: double.infinity,
-              height: 35,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: ListView.builder(
-                itemCount: background.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  return InkWell(
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(focausnode);
-                      setState(() {
-                        if (index == 0) {
-                          bgnumber = 0;
-                          selectedbg = false;
-                          txtdark = true;
-                        } else if (index == 1) {
-                          bgnumber = 1;
-                          selectedbg = true;
-                          txtdark = false;
-                        } else if (index == 2) {
-                          bgnumber = 2;
-                          selectedbg = true;
-                          txtdark = true;
-                        } else if (index == 3) {
-                          bgnumber = 3;
-                          selectedbg = true;
-                          txtdark = false;
-                        } else if (index == 4) {
-                          bgnumber = 4;
-                          selectedbg = true;
-                          txtdark = false;
-                        } else if (index == 5) {
-                          bgnumber = 5;
-                          selectedbg = true;
-                          txtdark = false;
-                        } else if (index == 6) {
-                          bgnumber = 6;
-                          selectedbg = true;
-                          txtdark = false;
-                        } else if (index == 7) {
-                          bgnumber = 7;
-                          selectedbg = true;
-                          txtdark = false;
-                        } else if (index == 8) {
-                          bgnumber = 8;
-                          selectedbg = true;
-                          txtdark = false;
-                        } else if (index == 9) {
-                          bgnumber = 9;
-                          selectedbg = true;
-                          txtdark = true;
-                        } else if (index == 10) {
-                          bgnumber = 10;
-                          selectedbg = true;
-                          txtdark = true;
-                        } else if (index == 11) {
-                          bgnumber = 11;
-                          selectedbg = true;
-                          txtdark = false;
-                        } else if (index == 12) {
-                          bgnumber = 12;
-                          selectedbg = true;
-                          txtdark = true;
-                        } else if (index == 13) {
-                          bgnumber = 13;
-                          selectedbg = true;
-                          txtdark = true;
-                        } else if (index == 14) {
-                          bgnumber = 14;
-                          selectedbg = true;
-                          txtdark = false;
-                        }
-                      });
-                    },
-                    child: Container(
-                      height: 25,
-                      width: 25,
-                      margin: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                            offset: Offset(
-                                0, 3), // changes position of shadow
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(5),
-                        image: DecorationImage(
-                          image: AssetImage(
-                            background[index],
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      alignment: Alignment.topRight,
-                    ),
-                  );
+            Expanded(
+              child: selectedImages.isEmpty
+                  ? const SizedBox()
+                  : GridView.builder(
+                padding: const EdgeInsets.all(6),
+                itemCount: selectedImages.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 1,
+                  crossAxisSpacing: 6,
+                  mainAxisSpacing: 6,
+                ),
+                itemBuilder: (context, index) {
+                  return _buildImageTile(index);
                 },
               ),
-            )
-                : const SizedBox(),
-            stretch
-                ? Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 0.75,
-                  margin: const EdgeInsets.only(top: 10),
-                  color: Colors.grey,
-                ),
-                InkWell(
-                    onTap: () {
-                      getImages();
-                    },
-                    child: CreatePostItem(
-                      cs: Colors.green,
-                      ist: Icons.add_photo_alternate_outlined,
-                      txt: "Photo/Video",
-                    )),
-                Container(
-                  width: double.infinity,
-                  height: 0.4,
-                  color: Colors.grey,
-                ),
-                CreatePostItem(
-                  cs: Colors.blue,
-                  ist: Icons.bookmark_border,
-                  txt: "Tag People",
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 0.4,
-                  color: Colors.grey,
-                ),
-                CreatePostItem(
-                  cs: Colors.orange,
-                  ist: Icons.tag_faces,
-                  txt: "Feelings/Activity",
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 0.4,
-                  color: Colors.grey,
-                ),
-                CreatePostItem(
-                  cs: Colors.redAccent,
-                  ist: Icons.location_on_outlined,
-                  txt: "Check In",
-                ),
-                bgcolor
-                    ? Container(
-                  width: double.infinity,
-                  height: 0.4,
-                  color: Colors.grey,
-                )
-                    : const SizedBox(),
-                bgcolor
-                    ? CreatePostItem(
-                  cs: Colors.red,
-                  ist: Icons.video_call_outlined,
-                  txt: "Live Video",
-                )
-                    : const SizedBox(),
-                bgcolor
-                    ? Container(
-                  width: double.infinity,
-                  height: 0.4,
-                  color: Colors.grey,
-                )
-                    : const SizedBox(),
-                bgcolor
-                    ? InkWell(
-                  onTap: () {
-                    setState(() {
-                      stretch = false;
-                      FocusScope.of(context)
-                          .requestFocus(focausnode);
-                    });
-                  },
-                  child: CreatePostItem(
-                    cs: Colors.cyanAccent,
-                    ist: Icons.text_fields,
-                    txt: "Background Colour",
-                  ),
-                )
-                    : SizedBox(),
-                bgcolor
-                    ? Container(
-                  width: double.infinity,
-                  height: 0.4,
-                  color: Colors.grey,
-                )
-                    : const SizedBox(),
-                CreatePostItem(
-                  cs: Colors.blueAccent,
-                  ist: Icons.camera_alt,
-                  txt: "Camera",
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 0.4,
-                  color: Colors.grey,
-                ),
-                bgcolor
-                    ? CreatePostItem(
-                  cs: Colors.cyan,
-                  ist: Icons.gif_box,
-                  txt: "GIF",
-                )
-                    : const SizedBox(),
-                bgcolor
-                    ? Container(
-                  width: double.infinity,
-                  height: 0.4,
-                  color: Colors.grey,
-                )
-                    : const SizedBox(),
-                bgcolor
-                    ? CreatePostItem(
-                  cs: Colors.deepOrange,
-                  ist: Icons.music_note,
-                  txt: "Music",
-                )
-                    : const SizedBox(),
-                Container(
-                  width: double.infinity,
-                  height: 0.4,
-                  color: Colors.grey,
-                ),
-              ],
-            )
-                : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      getImages();
-                    },
-                    icon: const Icon(
-                      Icons.add_photo_alternate_outlined,
-                      color: Colors.green,
-                    )),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.bookmark_border,
-                      color: Colors.blue,
-                    )),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.tag_faces,
-                      color: Colors.orange,
-                    )),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.location_on_outlined,
-                      color: Colors.redAccent,
-                    )),
-                IconButton(
-                    onPressed: () {
-                      setState(() {
-                        stretch = true;
-                        focausnode.unfocus();
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.menu,
-                      color: Colors.grey,
-                    )),
-              ],
             ),
+            _buildBackgroundSelector(),
+            stretch ? _buildPostOptions() : const SizedBox(),
           ],
         ),
       ),
     );
+
   }
 }

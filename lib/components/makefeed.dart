@@ -4,19 +4,21 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:news_app/components/reactionwidget.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../constants/colors.dart';
 import '../constants/data.dart';
 import '../models/postModel.dart';
-import 'commentscreen.dart';
+import '../screens/commentscreen.dart';
 import 'custom.snackbar.dart';
 import 'makecommentbutton.dart';
 import 'makelike.dart';
 import 'makelove.dart';
 import 'makesharebutton.dart';
+
 class makeFeed extends StatefulWidget {
   Post pst;
-  String uid, uname,usrimg;
-  makeFeed({required this.uid, required this.usrimg,  required this.uname, required this.pst});
+  String uid, uname, usrimg;
+  makeFeed({required this.uid, required this.usrimg, required this.uname, required this.pst});
 
   @override
   State<makeFeed> createState() => _makeFeedState();
@@ -56,7 +58,7 @@ class _makeFeedState extends State<makeFeed> {
             .collection('Reaction')
             .where('Post ID', isEqualTo: widget.pst.postid)
             .where('User ID', isEqualTo: widget.uid)
-        .limit(1)
+            .limit(1)
             .get()
             .then((value) {
           for (var doc in value.docs) {
@@ -72,12 +74,7 @@ class _makeFeedState extends State<makeFeed> {
         }
 
         bgnum = widget.pst.bgnumber;
-        if (bgnum == 0 ||
-            bgnum == 2 ||
-            bgnum == 9 ||
-            bgnum == 10 ||
-            bgnum == 12 ||
-            bgnum == 13) {
+        if (bgnum == 0 || bgnum == 2 || bgnum == 9 || bgnum == 10 || bgnum == 12 || bgnum == 13) {
           txtdark = true;
         } else {
           txtdark = false;
@@ -105,9 +102,7 @@ class _makeFeedState extends State<makeFeed> {
                     height: 50,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: NetworkImage(widget.pst.usrimg),
-                            fit: BoxFit.cover)),
+                        image: DecorationImage(image: NetworkImage(widget.pst.usrimg), fit: BoxFit.cover)),
                   ),
                   const SizedBox(
                     width: 10,
@@ -118,18 +113,14 @@ class _makeFeedState extends State<makeFeed> {
                       Text(
                         widget.pst.name,
                         style: TextStyle(
-                            color: Colors.grey[900],
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1),
+                            color: Colors.grey[900], fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1),
                       ),
                       const SizedBox(
                         height: 3,
                       ),
                       Text(
                         daysBetween(widget.pst.date.toDate(), DateTime.now()),
-                        style:
-                            const TextStyle(fontSize: 15, color: Colors.grey),
+                        style: const TextStyle(fontSize: 15, color: Colors.grey),
                       ),
                     ],
                   )
@@ -141,9 +132,7 @@ class _makeFeedState extends State<makeFeed> {
                   size: 30,
                   color: Colors.grey[600],
                 ),
-                onPressed: () {
-
-                },
+                onPressed: () {},
               )
             ],
           ),
@@ -194,11 +183,7 @@ class _makeFeedState extends State<makeFeed> {
                           ),
                     Text(
                       widget.pst.text,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey[800],
-                          height: 1.5,
-                          letterSpacing: .7),
+                      style: TextStyle(fontSize: 15, color: Colors.grey[800], height: 1.5, letterSpacing: .7),
                     ),
                   ],
                 ),
@@ -210,19 +195,15 @@ class _makeFeedState extends State<makeFeed> {
                   height: 200,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                          image:
-                              NetworkImage(widget.pst.Imageurls[0].toString()),
-                          fit: BoxFit.cover)),
+                      image:
+                          DecorationImage(image: NetworkImage(widget.pst.Imageurls[0].toString()), fit: BoxFit.cover)),
                 )
-              : (widget.pst.Imageurls.length >= 2 &&
-                      widget.pst.Imageurls.length <= 4)
+              : (widget.pst.Imageurls.length >= 2 && widget.pst.Imageurls.length <= 4)
                   ? Container(
                       child: GridView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: widget.pst.Imageurls.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                         ),
                         shrinkWrap: true,
@@ -232,76 +213,70 @@ class _makeFeedState extends State<makeFeed> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(3),
                                 image: DecorationImage(
-                                    image: NetworkImage(
-                                        widget.pst.Imageurls[index].toString()),
-                                    fit: BoxFit.cover)),
+                                    image: NetworkImage(widget.pst.Imageurls[index].toString()), fit: BoxFit.cover)),
                           );
                         },
                       ),
                     )
                   : widget.pst.Imageurls.length > 4
                       ? GridView.builder(
-                        itemCount: 4,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ),
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext context, int index) {
-                          if (index == 3) {
-                            return Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(3),
-                                      image: DecorationImage(
-                                          image: NetworkImage(widget
-                                              .pst.Imageurls[index]
-                                              .toString()),
-                                          fit: BoxFit.cover)),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.all(2),
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
+                          itemCount: 4,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ),
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == 3) {
+                              return Stack(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(3),
+                                        image: DecorationImage(
+                                            image: NetworkImage(widget.pst.Imageurls[index].toString()),
+                                            fit: BoxFit.cover)),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.all(2),
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(3),
+                                      color: Colors.grey.withOpacity(0.5),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "+ ${widget.pst.Imageurls.length}",
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return Container(
+                                margin: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(3),
-                                    color: Colors.grey.withOpacity(0.5),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "+ ${widget.pst.Imageurls.length}",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 26,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            );
-                          } else {
-                            return Container(
-                              margin: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3),
-                                  image: DecorationImage(
-                                      image: NetworkImage(widget
-                                          .pst.Imageurls[index]
-                                          .toString()),
-                                      fit: BoxFit.cover)),
-                            );
-                          }
-                        },
-                      )
+                                    image: DecorationImage(
+                                        image: NetworkImage(widget.pst.Imageurls[index].toString()),
+                                        fit: BoxFit.cover)),
+                              );
+                            }
+                          },
+                        )
                       : Container(),
           InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      CommentScreen(pst: widget.pst, uid: widget.uid,usrimg:widget.usrimg,fname:  widget.uname,)));
+                  builder: (BuildContext context) => CommentScreen(
+                        pst: widget.pst,
+                        uid: widget.uid,
+                        usrimg: widget.usrimg,
+                        fname: widget.uname,
+                      )));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -309,8 +284,7 @@ class _makeFeedState extends State<makeFeed> {
                 Row(
                   children: [
                     makeLike(),
-                    Transform.translate(
-                        offset: const Offset(-5, 0), child: makeLove()),
+                    Transform.translate(offset: const Offset(-5, 0), child: makeLove()),
                     const SizedBox(
                       width: 5,
                     ),
@@ -321,11 +295,9 @@ class _makeFeedState extends State<makeFeed> {
                   ],
                 ),
                 Text(
-                    widget.pst.comment.toString() == "0"
-                        ? "No Comments"
-                        : "${widget.pst.comment} Comments",
-                    style: TextStyle(fontSize: 13, color: Colors.grey[800]),
-                  ),
+                  widget.pst.comment.toString() == "0" ? "No Comments" : "${widget.pst.comment} Comments",
+                  style: TextStyle(fontSize: 13, color: Colors.grey[800]),
+                ),
               ],
             ),
           ),
@@ -335,16 +307,24 @@ class _makeFeedState extends State<makeFeed> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ReactionWidget(usrimg: widget.usrimg,
-                pst: widget.pst, uid: widget.uid, uname: widget.uname,rtnindex:rtnindex),
+              ReactionWidget(
+                  usrimg: widget.usrimg, pst: widget.pst, uid: widget.uid, uname: widget.uname, rtnindex: rtnindex),
               InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            CommentScreen(pst: widget.pst,usrimg: widget.usrimg, uid: widget.uid,fname:  widget.uname,)));
+                        builder: (BuildContext context) => CommentScreen(
+                              pst: widget.pst,
+                              usrimg: widget.usrimg,
+                              uid: widget.uid,
+                              fname: widget.uname,
+                            )));
                   },
                   child: makeCommentButton()),
-              makeShareButton(),
+              InkWell(
+                  onTap: () {
+                    Share.share("Name: ${widget.pst.name}, Post: ${widget.pst.text}");
+                  },
+                  child: makeShareButton()),
             ],
           )
         ],

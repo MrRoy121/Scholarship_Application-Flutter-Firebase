@@ -135,47 +135,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(
-                              left: 20, right: 20, top: 10),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 7),
-                          decoration: BoxDecoration(
-                              color: AppColors.mirage,
-                              border: Border.all(
-                                width: 1,
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          margin: const EdgeInsets.only(top: 10.0),
+                          child: TextFormField(
+                            controller: _conuserPhone,
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(color: AppColors.creamColor),
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(15.0)),
+                                borderSide:
+                                BorderSide(color: AppColors.creamColor),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(15.0)),
+                                borderSide:
+                                BorderSide(color: AppColors.creamColor),
+                              ),
+                              prefixIcon: Icon(
+                                Icons.phone,
                                 color: AppColors.creamColor,
                               ),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(15))),
-                          child: Row(
-                            children: [
-                              Text(
-                                "+880",
-                                style: TextStyle(color: AppColors.creamColor),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                '|',
-                                style: TextStyle(
-                                    fontSize: 26, color: AppColors.creamColor),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                  child: TextField(
-                                controller: _conuserPhone,
-                                keyboardType: TextInputType.number,
-                                style: TextStyle(color: AppColors.creamColor),
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintStyle:
-                                        TextStyle(color: AppColors.creamColor),
-                                    hintText: 'Phone Number'),
-                              ))
-                            ],
+                              hintText: 'Phone Number',
+                              fillColor: AppColors.mirage,
+                              hintStyle: TextStyle(color: AppColors.creamColor),
+                              filled: true,
+                            ),
                           ),
                         ),
                         Container(

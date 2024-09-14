@@ -8,9 +8,9 @@ import '../../../constants/colors.dart';
 import '../../../models/Comment.dart';
 import '../constants/data.dart';
 import '../models/postModel.dart';
-import 'custom.snackbar.dart';
-import 'makelike.dart';
-import 'makelove.dart';
+import '../components/custom.snackbar.dart';
+import '../components/makelike.dart';
+import '../components/makelove.dart';
 
 class CommentScreen extends StatefulWidget {
   Post pst;
@@ -46,7 +46,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(backgroundColor: Colors.white,
         body: SafeArea(
       child: Container(
         padding: const EdgeInsets.all(10),
