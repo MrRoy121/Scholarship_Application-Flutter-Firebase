@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:news_app/components/reactionwidget.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart';
 import '../../../constants/colors.dart';
 import '../constants/data.dart';
 import '../models/postModel.dart';
@@ -29,6 +34,50 @@ class _makeFeedState extends State<makeFeed> {
   int bgnum = 0;
   double fontsize = 16;
   bool txtdark = true;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+
+  void _setupFCM() {
+    // Request permission for notifications (especially on iOS)
+    _firebaseMessaging.requestPermission();
+
+    _firebaseMessaging.onTokenRefresh.listen((newToken) {
+      print("New FCM Token: $newToken");
+      _saveTokenToDatabase(); // Update the token in Firestore
+    });
+
+    // Also get the initial token
+    _firebaseMessaging.getToken().then((token) {
+      if (token != null) {
+        _saveTokenToDatabase(); // Save the token on app start
+      }
+    });
+  }
+
+  Future<void> _saveTokenToDatabase() async {
+    // Get the current user
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+      if (fcmToken != null) {
+        // Save the token to Firestore
+        await FirebaseFirestore.instance.collection('Users').doc(user.uid).set({
+          'fcm_token': fcmToken,
+          'last_updated': FieldValue.serverTimestamp(), // Optional: Track when it was updated
+        }, SetOptions(merge: true)); // Merge to update existing token
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _setupFCM();
+    _saveTokenToDatabase(); // Call this on app start
+  }
 
   String daysBetween(DateTime from, DateTime to) {
     Duration difference = to.difference(from);
@@ -48,11 +97,43 @@ class _makeFeedState extends State<makeFeed> {
       return "$seconds Seconds Ago";
     }
   }
+  Future<String?> getTokenFromDatabase() async {
+    User? user = FirebaseAuth.instance.currentUser;
 
+    if (user != null) {
+      DocumentSnapshot doc = await FirebaseFirestore.instance.collection('Users').doc(user.uid).get();
+      if (doc.exists) {
+        return doc['fcm_token'];
+      }
+    }
+    return null;
+  }
+  Future<void> sendNotification(String title, String body) async {
+    String? token = await getTokenFromDatabase();
+
+    if (token != null) {
+      await post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=BJZlWZvbKBnuFX-IuIYS30-zIEnIWlw2pZ5Fx8TBm5BnrDk8njnaJWbAdU8IFVzjMt_rSi6fyG_Y_RXKCbAYJ2E',
+        },
+        body: jsonEncode({
+          'to': token,
+          'notification': {
+            'title': title,
+            'body': body,
+          },
+        }),
+      );
+    } else {
+      print("FCM Token not found");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     int rtnindex = -1;
-    _add() {
+    _add() async {
       setState(() {
         FirebaseFirestore.instance
             .collection('Reaction')
@@ -80,6 +161,7 @@ class _makeFeedState extends State<makeFeed> {
           txtdark = false;
         }
       });
+      await sendNotification("New Reaction", "Someone reacted to your post!");
     }
 
     if (!isfirst) {

@@ -27,7 +27,7 @@ List<String> items = [
   "Posts",
   "All",
   "With Ielts",
-  "Without Ielts"
+  "Without Ielts",
   "Bachelor's Scholarship",
   "Master's Scholarship",
   "PHD Scholarship",

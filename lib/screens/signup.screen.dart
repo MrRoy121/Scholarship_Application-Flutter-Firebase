@@ -305,63 +305,77 @@ class _SignUpScreenState extends State<SignUpScreen> {
         backgroundColor: Colors.red.shade200,
       );
     } else {
-      String usrimg = "https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(1).jpg?alt=media&token=e14ab717-c75d-45b9-947c-2602f7916389&_gl=1*1tj7s46*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5MzE5LjYwLjAuMA..";
-      var code = Random().nextInt(9) + 0;
-      if(code==1){
-        usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(2).jpg?alt=media&token=7b9dcc38-de3f-42b1-96b6-96713fb93eaa&_gl=1*1216kri*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NjUxLjU2LjAuMA..";
-      }else if(code==2){
-        usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(3).jpg?alt=media&token=473010a8-79ca-496d-8de8-d0870c7435a4&_gl=1*1ktyceo*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NjY1LjQyLjAuMA..";
-      }else if(code==3){
-        usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(4).jpg?alt=media&token=689c1dcc-9c6d-4465-b7f1-9a0bbdbb0f8b&_gl=1*d4v8po*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5Njk3LjEwLjAuMA..";
-      }else if(code==4){
-        usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(5).jpg?alt=media&token=1ac20be7-7724-4dad-9c15-5644aca87254&_gl=1*ba812w*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NzA2LjEuMC4w";
-      }else if(code==5){
-        usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(6).jpg?alt=media&token=830327e4-798e-422b-a105-e0c3b8bdd2cc&_gl=1*1qz7svu*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NzE1LjUyLjAuMA..";
-      }else if(code==6){
-        usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(7).jpg?alt=media&token=f0934e9c-4e70-4d34-9e76-9aab160ded4e&_gl=1*m1bja5*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NzM2LjMxLjAuMA..";
-      }else if(code==7){
-        usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(8).jpg?alt=media&token=4fad4f20-8e70-436c-b1a3-31360ab194c1&_gl=1*1k8pi2k*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NzQ1LjIyLjAuMA..";
-      }else if(code==8){
-        usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(9).jpg?alt=media&token=1f98e9d5-db4d-42e5-96b6-9b74ea72d343&_gl=1*1qiutml*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NzUzLjE0LjAuMA..";
-      }
+      try{
 
-      final prefs = await SharedPreferences.getInstance();
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: pass)
-          .then((onValue) {
-        String? user = onValue.user?.uid;
-        FirebaseFirestore.instance.collection('Users').doc(user).set({
-          'Full Name': name,
-          'Email': email,
-          'Phone': phone,
-          'Password': pass,
-          'Usr Image':usrimg,
-        }).then((value) {
-          prefs.setBool('user', true);
-          prefs.setString("email", email);
-          prefs.setString("phone", phone);
-          prefs.setString("pass", pass);
-          prefs.setString("name", name);
-          prefs.setString("usrimg", usrimg);
-          prefs.setString("uid", user!);
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) => LoginScreen()),
-                  (Route<dynamic> route) => false);
-          SnackUtil.showSnackBar(
-            context: context,
-            text: "Signup Successfully",
-            textColor: AppColors.creamColor,
-            backgroundColor: Colors.green,
-          );
-        })
-            //     .catchError((error) => SnackUtil.showSnackBar(
-            //   context: context,
-            //   text: "Failed to add user: $error",
-            //   textColor: AppColors.creamColor,
-            //   backgroundColor: Colors.red,
-            // ))
-            ;
-      });
+        String usrimg = "https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(1).jpg?alt=media&token=e14ab717-c75d-45b9-947c-2602f7916389&_gl=1*1tj7s46*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5MzE5LjYwLjAuMA..";
+        var code = Random().nextInt(9) + 0;
+        if(code==1){
+          usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(2).jpg?alt=media&token=7b9dcc38-de3f-42b1-96b6-96713fb93eaa&_gl=1*1216kri*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NjUxLjU2LjAuMA..";
+        }else if(code==2){
+          usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(3).jpg?alt=media&token=473010a8-79ca-496d-8de8-d0870c7435a4&_gl=1*1ktyceo*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NjY1LjQyLjAuMA..";
+        }else if(code==3){
+          usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(4).jpg?alt=media&token=689c1dcc-9c6d-4465-b7f1-9a0bbdbb0f8b&_gl=1*d4v8po*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5Njk3LjEwLjAuMA..";
+        }else if(code==4){
+          usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(5).jpg?alt=media&token=1ac20be7-7724-4dad-9c15-5644aca87254&_gl=1*ba812w*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NzA2LjEuMC4w";
+        }else if(code==5){
+          usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(6).jpg?alt=media&token=830327e4-798e-422b-a105-e0c3b8bdd2cc&_gl=1*1qz7svu*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NzE1LjUyLjAuMA..";
+        }else if(code==6){
+          usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(7).jpg?alt=media&token=f0934e9c-4e70-4d34-9e76-9aab160ded4e&_gl=1*m1bja5*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NzM2LjMxLjAuMA..";
+        }else if(code==7){
+          usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(8).jpg?alt=media&token=4fad4f20-8e70-436c-b1a3-31360ab194c1&_gl=1*1k8pi2k*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NzQ1LjIyLjAuMA..";
+        }else if(code==8){
+          usrimg ="https://firebasestorage.googleapis.com/v0/b/richsocialmedia-7ac0e.appspot.com/o/user%2Fusr%20(9).jpg?alt=media&token=1f98e9d5-db4d-42e5-96b6-9b74ea72d343&_gl=1*1qiutml*_ga*MTEzNzE0OTg0Ni4xNjkwMTc4Njcw*_ga_CW55HF8NVT*MTY5NzM4OTE1MC40MDIuMS4xNjk3Mzg5NzUzLjE0LjAuMA..";
+        }
+
+        final prefs = await SharedPreferences.getInstance();
+        await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: email, password: pass)
+            .then((onValue) {
+          String? user = onValue.user?.uid;
+          if(onValue.user!.emailVerified){
+            FirebaseFirestore.instance.collection('Users').doc(user).set({
+              'Full Name': name,
+              'Email': email,
+              'Phone': phone,
+              'Password': pass,
+              'Usr Image':usrimg,
+            }).then((value) {
+              prefs.setBool('user', true);
+              prefs.setString("email", email);
+              prefs.setString("phone", phone);
+              prefs.setString("pass", pass);
+              prefs.setString("name", name);
+              prefs.setString("usrimg", usrimg);
+              prefs.setString("uid", user!);
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (BuildContext context) => LoginScreen()),
+                      (Route<dynamic> route) => false);
+              SnackUtil.showSnackBar(
+                context: context,
+                text: "Signup Successfully",
+                textColor: AppColors.creamColor,
+                backgroundColor: Colors.green,
+              );
+            });
+          }else{
+            onValue.user!.sendEmailVerification();
+            SnackUtil.showSnackBar(
+              context: context,
+              text: "A verification mail is send to your email. Please Verify",
+              textColor: AppColors.creamColor,
+              backgroundColor: Colors.green,
+            );
+          }
+        });
+      } catch(er, st){
+    SnackUtil.showSnackBar(
+    context: context,
+    text: "Something Went wrong: $er",
+    textColor: AppColors.creamColor,
+    backgroundColor: Colors.red.shade200,
+    );
+    }
+
     }
   }
 }

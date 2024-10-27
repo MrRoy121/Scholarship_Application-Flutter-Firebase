@@ -241,39 +241,60 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.red.shade200,
       );
     } else {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass)
+      try{
+        await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass)
             .then((value) {
-          FirebaseFirestore.instance
-              .collection('Users')
-              .doc(value.user?.uid)
-              .get()
-              .then((DocumentSnapshot docResults) {
-            if (docResults.exists) {
-              prefs.setBool('user', true);
-              prefs.setString("email", docResults.get("Email") ?? '');
-              prefs.setString("phone", docResults.get("Phone") ?? '');
-              prefs.setString("pass", docResults.get("Password") ?? '');
-              prefs.setString("name", docResults.get("Full Name") ?? '');
-              prefs.setString("usrimg", docResults.get('Usr Image') ?? '');
-              prefs.setString("uid", docResults.id);
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => HomeScreen()),
-                  (Route<dynamic> route) => false);
-              SnackUtil.showSnackBar(
-                context: context,
-                text: "Login Successfully",
-                textColor: AppColors.creamColor,
-                backgroundColor: Colors.green,
-              );
-            }
-          }).catchError((error) => SnackUtil.showSnackBar(
-                    context: context,
-                    text: "Failed to add user: $error",
-                    textColor: AppColors.creamColor,
-                    backgroundColor: Colors.red,
-                  ));
+              if(value.user!.emailVerified){
+                FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(value.user?.uid)
+                    .get()
+                    .then((DocumentSnapshot docResults) {
+                  if (docResults.exists) {
+                    prefs.setBool('user', true);
+                    prefs.setString("email", docResults.get("Email") ?? '');
+                    prefs.setString("phone", docResults.get("Phone") ?? '');
+                    prefs.setString("pass", docResults.get("Password") ?? '');
+                    prefs.setString("name", docResults.get("Full Name") ?? '');
+                    prefs.setString("usrimg", docResults.get('Usr Image') ?? '');
+                    prefs.setString("uid", docResults.id);
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => HomeScreen()),
+                            (Route<dynamic> route) => false);
+                    SnackUtil.showSnackBar(
+                      context: context,
+                      text: "Login Successfully",
+                      textColor: AppColors.creamColor,
+                      backgroundColor: Colors.green,
+                    );
+                  }
+                }).catchError((error) => SnackUtil.showSnackBar(
+                  context: context,
+                  text: "Failed to add user: $error",
+                  textColor: AppColors.creamColor,
+                  backgroundColor: Colors.red,
+                ));
+              }else{
+                value.user!.sendEmailVerification();
+                SnackUtil.showSnackBar(
+                  context: context,
+                  text: "A verification mail is send to your email. Please Verify",
+                  textColor: AppColors.creamColor,
+                  backgroundColor: Colors.green,
+                );
+              }
+
         });
+      }catch(er, st){
+        SnackUtil.showSnackBar(
+          context: context,
+          text: "Something Went wrong: $er",
+          textColor: AppColors.creamColor,
+          backgroundColor: Colors.red.shade200,
+        );
+      }
+
     }
   }
 }

@@ -1,13 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive/hive.dart';
 import 'package:news_app/provider/theme_provider.dart';
-import 'package:news_app/screens/home_screen.dart';
 import 'package:news_app/screens/splash_screen.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
 import 'package:provider/provider.dart';
-
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling a background message: ${message.messageId}');
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
@@ -21,6 +26,7 @@ void main() async {
       appId: dotenv.env['APP_ID'].toString(),
     ),
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   final appDirectory = await pathProvider.getApplicationDocumentsDirectory();
   Hive.init(appDirectory.path);
 
