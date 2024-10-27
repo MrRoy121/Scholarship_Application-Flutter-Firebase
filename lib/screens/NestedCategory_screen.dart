@@ -10,6 +10,19 @@ import 'home_screen.dart';
 class NestedcategoryScreen extends StatelessWidget {
   NestedcategoryScreen({required this.type});
   TypesMode type;
+
+  String? getCountryCode(List<TypesMode> typesList, NestedTypesMode nestedType) {
+    for (int i = 0; i < typesList.length; i++) {
+      for (int j = 0; j < typesList[i].nestedTypes.length; j++) {
+        if (typesList[i].nestedTypes[j] == nestedType) {
+          // Mapping based on the index as shown in your code
+          return (i * 5 + j).toString(); // Calculate the country code as a string
+        }
+      }
+    }
+    return null; // Return null if no match is found
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,10 +38,15 @@ class NestedcategoryScreen extends StatelessWidget {
           style: TextStyle(color: Color(0xffFCAF38), fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
-      body: ListView.builder(
+      body: GridView.builder(
         itemCount: type.nestedTypes.length,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 5,
+        ),
         itemBuilder: (context, index) {
           final nestedType = type.nestedTypes[index];
           var borderRadius = BorderRadius.circular(5);
@@ -38,167 +56,53 @@ class NestedcategoryScreen extends StatelessWidget {
             Random().nextInt(256),
             Random().nextInt(256),
           );
-          return Container(
-            margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-            child: Column(
-              children: [
-                ListTile(
-                  shape: RoundedRectangleBorder(borderRadius: borderRadius),
-                  leading: Icon(nestedType.icon, color: randomColor),
-                  title: Text(
-                    nestedType.name,
-                    style: TextStyle(fontWeight: FontWeight.w400),
+
+          return InkWell(
+            onTap: (){
+              String? country = getCountryCode(typesList, nestedType);
+              if (country != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AllPostingScreen(
+                      country: country,
+                      typess: '',
+                    ),
                   ),
-                  tileColor: randomColor.withOpacity(0.1),
-                  onTap: () {
-                    if (nestedType == typesList[0].nestedTypes[0]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '0',
-                            typess: '',
-                          ),
+                );
+              }
+            },
+            child:Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset(nestedType.asset, fit: BoxFit.cover),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: Colors.blueGrey.shade100,
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+                      child: Text(
+                        nestedType.name,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
                         ),
-                      );
-                    }else if (nestedType == typesList[0].nestedTypes[1]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '1',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[0].nestedTypes[2]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '2',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[0].nestedTypes[3]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '3',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[0].nestedTypes[4]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '4',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[0].nestedTypes[5]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '5',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[1].nestedTypes[0]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '6',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[1].nestedTypes[1]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '7',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[1].nestedTypes[2]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '8',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[1].nestedTypes[3]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '9',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[2].nestedTypes[0]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '10',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[2].nestedTypes[1]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '11',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[2].nestedTypes[2]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '12',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }else if (nestedType == typesList[2].nestedTypes[3]) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllPostingScreen(
-                            country: '13',
-                            typess: '',
-                          ),
-                        ),
-                      );
-                    }
-                  },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           );
         },
       ),
+
     );
   }
 }

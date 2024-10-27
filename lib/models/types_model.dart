@@ -3,25 +3,23 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TypesMode {
   final String name;
-  final IconData icon;
-  final Color backgroundColor;
+  final String asset;
   final List<NestedTypesMode> nestedTypes;
 
   TypesMode({
     required this.name,
-    required this.icon,
-    required this.backgroundColor,
+    required this.asset,
     required this.nestedTypes,
   });
 }
 
 class NestedTypesMode {
   final String name;
-  final IconData icon;
+  final String asset;
 
   NestedTypesMode({
     required this.name,
-    required this.icon,
+    required this.asset,
   });
 }
 
@@ -29,99 +27,85 @@ class NestedTypesMode {
 List<TypesMode> typesList = [
   TypesMode(
     name: 'Fully Funded European Scholarship',
-    icon: FontAwesomeIcons.earthEurope,
-    backgroundColor: Colors.blue,
+    asset: "assets/i1.jpeg",
     nestedTypes: [
       NestedTypesMode(
         name: 'Fully Funded Germany Scholarships',
-        icon: FontAwesomeIcons.schoolFlag,
+        asset: "assets/i11.jpeg",
       ),
       NestedTypesMode(
         name: 'Fully Funded United Kingdom Scholarships',
-        icon: FontAwesomeIcons.buildingFlag,
+        asset: "assets/i12.jpeg",
       ),
       NestedTypesMode(
         name: 'Fully Funded France Scholarships',
-        icon: FontAwesomeIcons.landmarkFlag,
+        asset: "assets/i13.jpeg",
       ),
       NestedTypesMode(
         name: 'Fully Funded Italy Scholarships',
-        icon: FontAwesomeIcons.flagCheckered,
+        asset: "assets/i14.jpeg",
       ),
       NestedTypesMode(
         name: 'Fully Funded Finland Scholarships',
-        icon: FontAwesomeIcons.houseMedicalFlag,
+        asset: "assets/i15.jpeg",
       ),
       NestedTypesMode(
         name: "Other's European Countries Scholarships",
-        icon: FontAwesomeIcons.flag,
+        asset: "assets/i16.jpeg",
       ),
     ],
   ),
   TypesMode(
     name: 'All Fully Funded Asian Countries Scholarship',
-    icon: FontAwesomeIcons.earthAsia,
-    backgroundColor: Colors.green,
+    asset: "assets/i2.jpeg",
     nestedTypes: [
       NestedTypesMode(
         name: 'Fully Funded Malaysian Scholarships',
-        icon: FontAwesomeIcons.flagCheckered,
-      ),
+        asset: "assets/i21.jpeg",  ),
       NestedTypesMode(
         name: 'Fully Funded Turkey Scholarships',
-        icon: FontAwesomeIcons.buildingFlag,
-      ),
+        asset: "assets/i22.jpeg",   ),
       NestedTypesMode(
         name: 'Fully Funded Japan Scholarships',
-        icon: FontAwesomeIcons.landmarkFlag,
-      ),
+        asset: "assets/i23.jpeg",   ),
       NestedTypesMode(
         name: "All other's Asian Countries Scholarships",
-        icon: FontAwesomeIcons.flag,
-      ),
+        asset: "assets/i24.jpeg", ),
     ],
   ),
   TypesMode(
     name: 'All Fully Funded Gulf countries Scholarships',
-    icon: FontAwesomeIcons.earthAfrica,
-    backgroundColor: Colors.orange,
+    asset: "assets/i3.jpeg",
     nestedTypes: [
       NestedTypesMode(
         name: 'Fully Funded Saudi Arabia Scholarships',
-        icon: FontAwesomeIcons.houseFlag,
+        asset: "assets/i31.jpeg",
       ),
       NestedTypesMode(
         name: 'Fully Funded UAE Scholarships',
-        icon: FontAwesomeIcons.buildingFlag,
+        asset: "assets/i32.jpeg",
       ),
       NestedTypesMode(
         name: 'Fully Funded Qatar Scholarships',
-        icon: FontAwesomeIcons.landmarkFlag,
+        asset: "assets/i33.jpeg",
       ),
       NestedTypesMode(
         name: "All other's Gulf Countries Scholarships",
-        icon: FontAwesomeIcons.flag,
+        asset: "assets/i34.jpeg",
       ),
     ],
   ),
   TypesMode(
-      name: 'Fully Funded China Scholarships',
-      icon: FontAwesomeIcons.yenSign,
-      backgroundColor: Colors.cyan,
+      name: 'Fully Funded China Scholarships',    asset: "assets/i4.jpeg",
+
       nestedTypes: []),
   TypesMode(
-      name: 'Fully Funded USA Scholarships',
-      icon: FontAwesomeIcons.earthAmericas,
-      backgroundColor: Colors.brown,
+      name: 'Fully Funded USA Scholarships',    asset: "assets/i5.jpeg",
       nestedTypes: []),
   TypesMode(
-      name: 'Fully Funded Australia Scholarships',
-      icon: FontAwesomeIcons.flagUsa,
-      backgroundColor: Colors.red,
-      nestedTypes: []),
+      name: 'Fully Funded Australia Scholarships',    asset: "assets/i6.jpeg",
+       nestedTypes: []),
   TypesMode(
-      name: 'Avail Our Services',
-      icon: FontAwesomeIcons.servicestack,
-      backgroundColor: Colors.deepPurple,
+      name: 'Avail Our Services',    asset: "assets/i7.jpeg",
       nestedTypes: []),
 ];
