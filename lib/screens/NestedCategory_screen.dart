@@ -38,71 +38,86 @@ class NestedcategoryScreen extends StatelessWidget {
           style: TextStyle(color: Color(0xffFCAF38), fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
-      body: GridView.builder(
-        itemCount: type.nestedTypes.length,
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 5,
-        ),
-        itemBuilder: (context, index) {
-          final nestedType = type.nestedTypes[index];
-          var borderRadius = BorderRadius.circular(5);
-          final Color randomColor = Color.fromARGB(
-            255,
-            Random().nextInt(256),
-            Random().nextInt(256),
-            Random().nextInt(256),
-          );
+      body: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10),
+        child: GridView.builder(
+          itemCount: type.nestedTypes.length,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 10,
+            childAspectRatio: 2 / 1,
+            crossAxisSpacing: 5,
+          ),
+          itemBuilder: (context, index) {
+            final nestedType = type.nestedTypes[index];
+            var borderRadius = BorderRadius.circular(5);
+            final Color randomColor = Color.fromARGB(
+              255,
+              Random().nextInt(256),
+              Random().nextInt(256),
+              Random().nextInt(256),
+            );
 
-          return InkWell(
-            onTap: (){
-              String? country = getCountryCode(typesList, nestedType);
-              if (country != null) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AllPostingScreen(
-                      country: country,
-                      typess: '',
-                    ),
-                  ),
-                );
-              }
-            },
-            child:Stack(
-              alignment: Alignment.center,
-              children: [
-                Image.asset(nestedType.asset, fit: BoxFit.cover),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+            return Container(
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(40)),
+              child: InkWell(
+                onTap: () {
+                  String? country = getCountryCode(typesList, nestedType);
+                  if (country != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AllPostingScreen(
+                          country: country,
+                          typess: '',
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Row(
                   children: [
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: Colors.blueGrey.shade100,
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
-                      child: Text(
-                        nestedType.name,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+                    Expanded(
+                      flex: 2,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(nestedType.asset),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        child: Text(
+                          nestedType.name,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
-          );
-        },
+              ),
+            );
+          },
+        ),
       ),
-
     );
   }
 }

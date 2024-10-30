@@ -164,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(width: 20),
                 InkWell(
                   onTap: () async {
-                    launchUrl(Uri.parse("https://www.linkedin.com/in/rafiq-ullah-b59051319/"));
+                    launchUrl(Uri.parse("https://www.linkedin.com/in/rafiq-ullah-b59051319?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"));
                   },
                   child: FaIcon(
                     FontAwesomeIcons.linkedin,
@@ -174,20 +174,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(width: 20),
                 InkWell(
                   onTap: () async {
-                    launchUrl(Uri.parse("https://web.facebook.com/abroadscholarships2024/"));
+                    launchUrl(Uri.parse("https://www.facebook.com/profile.php?id=61567379290663"));
                   },
                   child: FaIcon(
                     FontAwesomeIcons.facebook,
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                  ),
-                ),
-                SizedBox(width: 20),
-                InkWell(
-                  onTap: () async {
-                    launchUrl(Uri.parse("https://www.instagram.com/abroadscholarships2024/"));
-                  },
-                  child: FaIcon(
-                    FontAwesomeIcons.instagram,
                     color: Theme.of(context).scaffoldBackgroundColor,
                   ),
                 ),
@@ -204,10 +194,30 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(width: 20),
                 InkWell(
                   onTap: () async {
-                    launchUrl(Uri.parse("https://chat.whatsapp.com/E0yxvNtklDHGwNy98NZj0B"));
+                    launchUrl(Uri.parse("https://www.tiktok.com/@prof_rafiq"));
                   },
                   child: FaIcon(
-                    FontAwesomeIcons.whatsapp,
+                    FontAwesomeIcons.tiktok,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
+                SizedBox(width: 20),
+                InkWell(
+                  onTap: () async {
+                    launchUrl(Uri.parse("https://worldstudyscholarships.blogspot.com/"));
+                  },
+                  child: FaIcon(
+                    FontAwesomeIcons.weebly,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
+                SizedBox(width: 20),
+                InkWell(
+                  onTap: () async {
+                    launchUrl(Uri.parse("https://www.youtube.com/@8ballpoolreward/videos"));
+                  },
+                  child: FaIcon(
+                    FontAwesomeIcons.youtube,
                     color: Theme.of(context).scaffoldBackgroundColor,
                   ),
                 ),
