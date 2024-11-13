@@ -40,82 +40,80 @@ class NestedcategoryScreen extends StatelessWidget {
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
-        child: GridView.builder(
-          itemCount: type.nestedTypes.length,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 10,
-            childAspectRatio: 2 / 1,
-            crossAxisSpacing: 5,
-          ),
-          itemBuilder: (context, index) {
-            final nestedType = type.nestedTypes[index];
-            var borderRadius = BorderRadius.circular(5);
-            final Color randomColor = Color.fromARGB(
-              255,
-              Random().nextInt(256),
-              Random().nextInt(256),
-              Random().nextInt(256),
-            );
+        child: SingleChildScrollView(
+          child: ListView.builder(
+            itemCount: type.nestedTypes.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final nestedType = type.nestedTypes[index];
+              var borderRadius = BorderRadius.circular(5);
+              final Color randomColor = Color.fromARGB(
+                255,
+                Random().nextInt(256),
+                Random().nextInt(256),
+                Random().nextInt(256),
+              );
 
-            return Container(
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(40)),
-              child: InkWell(
-                onTap: () {
-                  String? country = getCountryCode(typesList, nestedType);
-                  if (country != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AllPostingScreen(
-                          country: country,
-                          typess: '',
+              return Container(
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.symmetric(vertical: 5),
+                height: 140,
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(40)),
+                child: InkWell(
+                  onTap: () {
+                    String? country = getCountryCode(typesList, nestedType);
+                    if (country != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllPostingScreen(
+                            country: country,
+                            typess: '',
+                          ),
                         ),
-                      ),
-                    );
-                  }
-                },
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(nestedType.asset),
-                              fit: BoxFit.cover,
+                      );
+                    }
+                  },
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(40),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(nestedType.asset),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        child: Text(
-                          nestedType.name,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          child: Text(
+                            nestedType.name,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

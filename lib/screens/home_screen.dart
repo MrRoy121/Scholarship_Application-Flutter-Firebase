@@ -211,16 +211,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Theme.of(context).scaffoldBackgroundColor,
                   ),
                 ),
-                SizedBox(width: 20),
-                InkWell(
-                  onTap: () async {
-                    launchUrl(Uri.parse("https://www.youtube.com/@8ballpoolreward/videos"));
-                  },
-                  child: FaIcon(
-                    FontAwesomeIcons.youtube,
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                  ),
-                ),
+                // SizedBox(width: 20),
+                // InkWell(
+                //   onTap: () async {
+                //     launchUrl(Uri.parse("https://www.youtube.com/@8ballpoolreward/videos"));
+                //   },
+                //   child: FaIcon(
+                //     FontAwesomeIcons.youtube,
+                //     color: Theme.of(context).scaffoldBackgroundColor,
+                //   ),
+                // ),
               ],
             ),
           ),

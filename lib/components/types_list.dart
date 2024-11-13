@@ -13,23 +13,20 @@ class TypesList extends StatelessWidget {
   Widget build(BuildContext context) {
     var borderRadius = BorderRadius.circular(5);
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: SingleChildScrollView(
-        child: GridView.builder(
+        child: ListView.builder(
           itemCount: types.length,
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 10,
-            childAspectRatio: 2 / 1,
-            crossAxisSpacing: 5,
-          ),
           itemBuilder: (context, index) {
             final type = types[index];
             return Container(
               padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(40)),
+              margin: EdgeInsets.symmetric(vertical: 5),
+              height: 140,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(40)),
               child: InkWell(
                 onTap: () {
                   if (index == 3) {
@@ -83,7 +80,7 @@ class TypesList extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(40),
                         child: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -94,7 +91,9 @@ class TypesList extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Expanded(
                       flex: 3,
                       child: Container(
@@ -102,7 +101,7 @@ class TypesList extends StatelessWidget {
                           type.name,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 18,
                             fontWeight: FontWeight.w600,
                             color: Colors.black87,
                           ),
