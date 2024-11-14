@@ -165,47 +165,47 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(
-                      "Stories",
-                      style: TextStyle(
-                          color: Colors.grey[900], fontWeight: FontWeight.bold, fontSize: 22, letterSpacing: 1.2),
-                    ),
-                    const Text("See Archive"),
-                  ],
-                ),
-              ),
-              Container(
-                height: 180,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    makeStory(
-                        storyImage: 'assets/story/story-1.jpg',
-                        userImage: 'assets/aatik-tasneem.jpg',
-                        userName: 'Aatik Tasneem'),
-                    makeStory(
-                        storyImage: 'assets/story/story-3.jpg',
-                        userImage: 'assets/aiony-haust.jpg',
-                        userName: 'Aiony Haust'),
-                    makeStory(
-                        storyImage: 'assets/story/story-4.jpg',
-                        userImage: 'assets/averie-woodard.jpg',
-                        userName: 'Averie Woodard'),
-                    makeStory(
-                        storyImage: 'assets/story/story-5.jpg',
-                        userImage: 'assets/azamat-zhanisov.jpg',
-                        userName: 'Azamat Zhanisov'),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(20),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     crossAxisAlignment: CrossAxisAlignment.baseline,
+              //     textBaseline: TextBaseline.alphabetic,
+              //     children: [
+              //       Text(
+              //         "Stories",
+              //         style: TextStyle(
+              //             color: Colors.grey[900], fontWeight: FontWeight.bold, fontSize: 22, letterSpacing: 1.2),
+              //       ),
+              //       const Text("See Archive"),
+              //     ],
+              //   ),
+              // ),
+              // Container(
+              //   height: 180,
+              //   padding: const EdgeInsets.symmetric(horizontal: 20),
+              //   child: ListView(
+              //     scrollDirection: Axis.horizontal,
+              //     children: [
+              //       makeStory(
+              //           storyImage: 'assets/story/story-1.jpg',
+              //           userImage: 'assets/aatik-tasneem.jpg',
+              //           userName: 'Aatik Tasneem'),
+              //       makeStory(
+              //           storyImage: 'assets/story/story-3.jpg',
+              //           userImage: 'assets/aiony-haust.jpg',
+              //           userName: 'Aiony Haust'),
+              //       makeStory(
+              //           storyImage: 'assets/story/story-4.jpg',
+              //           userImage: 'assets/averie-woodard.jpg',
+              //           userName: 'Averie Woodard'),
+              //       makeStory(
+              //           storyImage: 'assets/story/story-5.jpg',
+              //           userImage: 'assets/azamat-zhanisov.jpg',
+              //           userName: 'Azamat Zhanisov'),
+              //     ],
+              //   ),
+              // ),
               StreamBuilder<QuerySnapshot>(
                 stream:
                     FirebaseFirestore.instance.collection('Posts').orderBy("Time", descending: true).snapshots(),
