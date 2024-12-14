@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive/hive.dart';
 import 'package:news_app/provider/theme_provider.dart';
+import 'package:news_app/screens/NewsPostScreen.dart';
 import 'package:news_app/screens/splash_screen.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
 import 'package:provider/provider.dart';
@@ -33,6 +34,8 @@ void main() async {
   final settings = await Hive.openBox('settings');
   bool isLightTheme = settings.get('isLightTheme') ?? false;
   runApp(
+
+     // AdminApp()
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(isLightTheme: isLightTheme),
       child: AppStart(),

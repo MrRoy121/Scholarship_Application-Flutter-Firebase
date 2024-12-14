@@ -38,3 +38,12 @@ List<String> Contries = [
   "USA", //15
   "Australia" //16
 ];
+
+
+List<String> typess = [
+  "With Ielts",
+  "Without Ielts",
+  "Bachelor's Scholarship",
+  "Master's Scholarship",
+  "PHD Scholarship",
+];
