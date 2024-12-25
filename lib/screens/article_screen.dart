@@ -36,27 +36,30 @@ class _ArticleScreenState extends State<ArticleScreen> {
       checkConnectivity();
     });
 
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            setState(() {
-              position = 1;
-            });
-          },
-          onPageStarted: (String url) {
-            setState(() {
-              position = 1;
-            });
-          },
-          onPageFinished: (String url) {
-            setState(() {
-              position = 0;
-            });
-          },
-        ),
-      )..loadRequest(Uri.parse(widget.article.fullArticle));;
+    if(widget.article.fullArticle != null && widget.article.fullArticle != ''){
+      _controller = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (int progress) {
+              setState(() {
+                position = 1;
+              });
+            },
+            onPageStarted: (String url) {
+              setState(() {
+                position = 1;
+              });
+            },
+            onPageFinished: (String url) {
+              setState(() {
+                position = 0;
+              });
+            },
+          ),
+        )..loadRequest(Uri.parse(widget.article.fullArticle));
+
+    }
     getTheme();
   }
 
@@ -130,7 +133,8 @@ class _ArticleScreenState extends State<ArticleScreen> {
           ],
         ),
         actions: <Widget>[
-          PopupMenuButton(
+
+          if(widget.article.fullArticle != null && widget.article.fullArticle != '') PopupMenuButton(
             itemBuilder: (BuildContext context) {
               return MenuItems.choices.map((String choice) {
                 return PopupMenuItem(
@@ -183,7 +187,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
 
           // Country Name
           Text(
-            widget.article.country.join(', '),
+            widget.article.country.map((index) {
+              return Contries[int.parse(index)];
+            }).join(', '),
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8.0),

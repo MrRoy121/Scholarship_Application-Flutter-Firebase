@@ -35,7 +35,7 @@ void main() async {
   bool isLightTheme = settings.get('isLightTheme') ?? false;
   runApp(
 
-     // AdminApp()
+    //  AdminApp()
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(isLightTheme: isLightTheme),
       child: AppStart(),

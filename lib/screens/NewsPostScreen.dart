@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 
@@ -27,18 +31,49 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
   final _imageUrlController = TextEditingController();
   final _readMoreUrlController = TextEditingController();
   final _descriptionController = TextEditingController();
+  String? _selectedImagePath;
   DateTime? _publishDate;
   DateTime? _lastSubmitDate;
   MultiSelectController<String> listcontroller1 = MultiSelectController(), listcontroller2 = MultiSelectController();
   List<String> selectedCountries = [];
   List<String> selectedTypes = [];
 
+
   Future<void> _submitData() async {
-    if (_titleController.text.isEmpty || selectedCountries.isEmpty || selectedTypes.isEmpty || _imageUrlController.text.isEmpty || _publishDate == null) {
+    if (_titleController.text.isEmpty ||
+        selectedCountries.isEmpty ||
+        selectedTypes.isEmpty ||
+        (_imageUrlController.text.isEmpty && _selectedImagePath == null) ||
+        _publishDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Title, Country, Type, Image Url, Publish Date is Required!')),
+        SnackBar(content: Text('Title, Country, Type, Image (URL or File), Publish Date is Required!')),
       );
       return;
+    }
+
+    String? imageUrl;
+
+    // Upload image to Firebase Storage if an image is picked
+    if (_selectedImagePath != null) {
+      try {
+        final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        final storageRef = FirebaseStorage.instance.ref().child('images/$fileName');
+
+        UploadTask uploadTask = storageRef.putFile(File(_selectedImagePath!));
+        TaskSnapshot snapshot = await uploadTask;
+
+        // Get the download URL
+        imageUrl = await snapshot.ref.getDownloadURL();
+      } catch (e) {
+        print('Error uploading image: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to upload image.')),
+        );
+        return;
+      }
+    } else {
+      // Use the URL from the text field if no image is picked
+      imageUrl = _imageUrlController.text;
     }
 
     final data = {
@@ -49,7 +84,7 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
       'type': selectedTypes.map((item) {
         return (typess.indexOf(item) + 1).toString();
       }).toList(),
-      'img_url': _imageUrlController.text,
+      'img_url': imageUrl,
       'read_more_url': _readMoreUrlController.text,
       'publishedDate': _publishDate,
       'lastApplyDate': _lastSubmitDate ?? DateTime.now(),
@@ -74,6 +109,7 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
         selectedTypes.clear();
         _publishDate = null;
         _lastSubmitDate = null;
+        _selectedImagePath = null; // Clear the selected image path
       });
     } catch (e) {
       print('Error: $e');
@@ -83,6 +119,18 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
     }
   }
 
+
+  Future<void> _selectImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? selectedImage = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (selectedImage != null) {
+      setState(() {
+        _selectedImagePath = selectedImage.path; // Store the path of the selected image
+        _imageUrlController.clear(); // Clear the image URL
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,11 +269,29 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
                 },
               ),
               SizedBox(height: 16),
-              Text('Image URL:', style: TextStyle(fontSize: 16)),
-              TextField(
-                controller: _imageUrlController,
-                decoration: InputDecoration(border: OutlineInputBorder()),
+              Text('Image URL or Select Image:', style: TextStyle(fontSize: 16)),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _imageUrlController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter Image URL',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.photo),
+                    onPressed: _selectImage,
+                  ),
+                ],
               ),
+              if (_selectedImagePath != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text('Selected Image: $_selectedImagePath'),
+                ),
               SizedBox(height: 16),
               Text('Publish Date:', style: TextStyle(fontSize: 16)),
               TextButton(
