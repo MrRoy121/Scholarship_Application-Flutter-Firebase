@@ -1,18 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:news_app/models/article_model.dart';
 import 'package:news_app/screens/article_screen.dart';
 import 'package:news_app/screens/image_screen.dart';
 import 'package:transition/transition.dart';
 
 class NewsTile extends StatelessWidget {
-  final String image, title, content, date, date1, fullArticle;
+  final ArticleModel article;
   NewsTile({
-    required this.content,
-    required this.date,
-    required this.date1,
-    required this.image,
-    required this.title,
-    required this.fullArticle,
+    required this.article,
   });
 
   @override
@@ -38,12 +35,12 @@ class NewsTile extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(6),
                 child: Hero(
-                  tag: 'image-$image',
+                  tag: 'image-${article.image}',
                   child: CachedNetworkImage(
                     height: 200,
                     width: MediaQuery.of(context).size.width,
                     fit: BoxFit.cover,
-                    imageUrl: image,
+                    imageUrl: article.image,
                     placeholder: (context, url) => Image(
                       image: AssetImage('assets/dotted-placeholder.jpg'),
                       height: 200,
@@ -58,8 +55,8 @@ class NewsTile extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ImageScreen(
-                      imageUrl: image,
-                      headline: title,
+                      imageUrl: article.image,
+                      headline: article.title,
                     ),
                   ),
                 );
@@ -75,14 +72,14 @@ class NewsTile extends StatelessWidget {
                       height: 12,
                     ),
                     Text(
-                      title,
+                      article.title,
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                     ),
                     SizedBox(
                       height: 6,
                     ),
                     Text(
-                      content,
+                      article.content,
                       maxLines: 2,
                       style: TextStyle(
                         fontSize: 14,
@@ -94,8 +91,8 @@ class NewsTile extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Published Date: $date', style: TextStyle(color: Colors.grey, fontSize: 12.0)),
-                        Text("Deadline Date: $date1", style: TextStyle(color: Colors.grey, fontSize: 12.0))
+                        Text('Published Date: ${DateFormat.yMd().format(article.publishedDate)}', style: TextStyle(color: Colors.grey, fontSize: 12.0)),
+                        Text("Deadline Date: ${DateFormat.yMd().format(article.lastApplyDate)}", style: TextStyle(color: Colors.grey, fontSize: 12.0))
                       ],
                     )
                   ],
@@ -105,7 +102,7 @@ class NewsTile extends StatelessWidget {
                 Navigator.push(
                   context,
                   Transition(
-                    child: ArticleScreen(articleUrl: fullArticle),
+                    child: ArticleScreen(article: article),
                     transitionEffect: TransitionEffect.BOTTOM_TO_TOP,
                   ),
                 );

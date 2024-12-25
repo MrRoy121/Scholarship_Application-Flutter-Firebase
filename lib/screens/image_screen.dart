@@ -51,7 +51,7 @@ class _ImageScreenState extends State<ImageScreen>
 
   checkConnectivity() async {
     var result = await Connectivity().checkConnectivity();
-    showConnectivitySnackBar(result);
+    showConnectivitySnackBar(result.first);
   }
 
   void showConnectivitySnackBar(ConnectivityResult result) {

@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:news_app/models/article_model.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../components/news_tile.dart';
@@ -40,7 +41,7 @@ class _AllPostingScreenState extends State<AllPostingScreen> {
 
   checkConnectivity() async {
     var result = await Connectivity().checkConnectivity();
-    showConnectivitySnackBar(result);
+    showConnectivitySnackBar(result.first);
   }
 
   void showConnectivitySnackBar(ConnectivityResult result) {
@@ -73,7 +74,6 @@ class _AllPostingScreenState extends State<AllPostingScreen> {
     _loading = true;
     checkConnectivity();
     await newsClass.getNews();
-
 
     print("SSS SS Country - ${widget.country}, TypeFilter - ${widget.typess}");
     articles = newsClass.filterNewsByCountryAndType(widget.country, widget.typess);
@@ -137,9 +137,8 @@ class _AllPostingScreenState extends State<AllPostingScreen> {
                       _articleExists = false;
                     } else {
                       _articleExists = true;
-                    }setState(() {
-
-                    });
+                    }
+                    setState(() {});
                   },
                   child: Card(
                     margin: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
@@ -181,12 +180,7 @@ class _AllPostingScreenState extends State<AllPostingScreen> {
                           itemCount: articles.length,
                           itemBuilder: (BuildContext context, int index) {
                             return NewsTile(
-                              image: articles[index].image,
-                              title: articles[index].title,
-                              content: articles[index].content,
-                              date: DateFormat.yMMMd().format(articles[index].publishedDate),
-                              date1: DateFormat.yMMMd().format(articles[index].lastApplyDate),
-                              fullArticle: articles[index].fullArticle,
+                              article: articles[index]
                             );
                           },
                         ),
