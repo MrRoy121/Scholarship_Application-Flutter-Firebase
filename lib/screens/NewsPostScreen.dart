@@ -53,7 +53,6 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
 
     String? imageUrl;
 
-    // Upload image to Firebase Storage if an image is picked
     if (_selectedImagePath != null) {
       try {
         final fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -62,7 +61,6 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
         UploadTask uploadTask = storageRef.putFile(File(_selectedImagePath!));
         TaskSnapshot snapshot = await uploadTask;
 
-        // Get the download URL
         imageUrl = await snapshot.ref.getDownloadURL();
       } catch (e) {
         print('Error uploading image: $e');
@@ -72,7 +70,6 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
         return;
       }
     } else {
-      // Use the URL from the text field if no image is picked
       imageUrl = _imageUrlController.text;
     }
 
@@ -97,7 +94,6 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
         SnackBar(content: Text('News article posted successfully!')),
       );
 
-      // Clear fields after submission
       _titleController.clear();
       _imageUrlController.clear();
       _readMoreUrlController.clear();
@@ -109,7 +105,7 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
         selectedTypes.clear();
         _publishDate = null;
         _lastSubmitDate = null;
-        _selectedImagePath = null; // Clear the selected image path
+        _selectedImagePath = null;
       });
     } catch (e) {
       print('Error: $e');
@@ -126,11 +122,12 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
 
     if (selectedImage != null) {
       setState(() {
-        _selectedImagePath = selectedImage.path; // Store the path of the selected image
-        _imageUrlController.clear(); // Clear the image URL
+        _selectedImagePath = selectedImage.path;
+        _imageUrlController.clear();
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -53,11 +53,9 @@ class NewsTile extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => ImageScreen(
-                      imageUrl: article.image,
-                      headline: article.title,
-                    ),
+                  Transition(
+                    child: ArticleScreen(article: article),
+                    transitionEffect: TransitionEffect.BOTTOM_TO_TOP,
                   ),
                 );
               },
