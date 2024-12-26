@@ -174,6 +174,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(width: 20),
                 InkWell(
                   onTap: () async {
+                    launchUrl(Uri.parse("https://allabroadscholarships.com/"));
+                  },
+                  child: FaIcon(
+                    FontAwesomeIcons.webflow,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
+                SizedBox(width: 20),
+                InkWell(
+                  onTap: () async {
                     launchUrl(Uri.parse("https://www.facebook.com/profile.php?id=61567379290663"));
                   },
                   child: FaIcon(
@@ -233,11 +243,11 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (context, index) {
                 final text = items[index];
                 final textPainter = TextPainter(
-                  text: TextSpan(text: text, style: TextStyle(fontSize: 16)),
+                  text: TextSpan(text: text, style: TextStyle(fontSize: 14)),
                   maxLines: 1,
                   textDirection: ui.TextDirection.ltr,
                 )..layout(minWidth: 0, maxWidth: double.infinity);
-                final textWidth = textPainter.size.width + 20;
+                final textWidth = textPainter.size.width + 25;
                 return GestureDetector(
                   onTap: () {
                     if(index == 0){

@@ -30,6 +30,7 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
   final _titleController = TextEditingController();
   final _imageUrlController = TextEditingController();
   final _readMoreUrlController = TextEditingController();
+  final _applyUrlController = TextEditingController();
   final _descriptionController = TextEditingController();
   String? _selectedImagePath;
   DateTime? _publishDate;
@@ -83,6 +84,7 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
       }).toList(),
       'img_url': imageUrl,
       'read_more_url': _readMoreUrlController.text,
+      'apply_url': _applyUrlController.text,
       'publishedDate': _publishDate,
       'lastApplyDate': _lastSubmitDate ?? DateTime.now(),
       'content': _descriptionController.text,
@@ -97,6 +99,7 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
       _titleController.clear();
       _imageUrlController.clear();
       _readMoreUrlController.clear();
+      _applyUrlController.clear();
       _descriptionController.clear();
       listcontroller1.clearAll();
       listcontroller2.clearAll();
@@ -329,6 +332,12 @@ class _NewsPostScreenState extends State<NewsPostScreen> {
               Text('Read More URL:', style: TextStyle(fontSize: 16)),
               TextField(
                 controller: _readMoreUrlController,
+                decoration: InputDecoration(border: OutlineInputBorder()),
+              ),
+              SizedBox(height: 16),
+              Text('Apply URL:', style: TextStyle(fontSize: 16)),
+              TextField(
+                controller: _applyUrlController,
                 decoration: InputDecoration(border: OutlineInputBorder()),
               ),
               SizedBox(height: 16),

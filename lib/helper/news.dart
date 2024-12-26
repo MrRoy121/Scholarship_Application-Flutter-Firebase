@@ -23,7 +23,7 @@ class News {
             lastApplyDate: data['lastApplyDate'].toDate(),
             publishedDate: data['publishedDate'].toDate(),
             country: country,
-            type: types,
+            type: types,applyURL: data['apply_url'],
             image: data['img_url'].toString(),
             content: data['content'].toString(),
             fullArticle: data['read_more_url'].toString(),

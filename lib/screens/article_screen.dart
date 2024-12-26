@@ -36,7 +36,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
       checkConnectivity();
     });
 
-    if(widget.article.fullArticle != null && widget.article.fullArticle != ''){
+    if (widget.article.fullArticle != null && widget.article.fullArticle != '') {
       _controller = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
         ..setNavigationDelegate(
@@ -57,8 +57,8 @@ class _ArticleScreenState extends State<ArticleScreen> {
               });
             },
           ),
-        )..loadRequest(Uri.parse(widget.article.fullArticle));
-
+        )
+        ..loadRequest(Uri.parse(widget.article.fullArticle));
     }
     getTheme();
   }
@@ -102,7 +102,7 @@ class _ArticleScreenState extends State<ArticleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool hasFullArticle =  widget.article.fullArticle.isNotEmpty;
+    bool hasFullArticle = widget.article.fullArticle.isNotEmpty;
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: isLightTheme
@@ -133,28 +133,31 @@ class _ArticleScreenState extends State<ArticleScreen> {
           ],
         ),
         actions: <Widget>[
-
-          if(widget.article.fullArticle != null && widget.article.fullArticle != '') PopupMenuButton(
-            itemBuilder: (BuildContext context) {
-              return MenuItems.choices.map((String choice) {
-                return PopupMenuItem(
-                  child: Text(choice),
-                  value: choice,
-                );
-              }).toList();
-            },
-            onSelected: choiceAction,
-          )
+          if (widget.article.fullArticle != null && widget.article.fullArticle != '')
+            PopupMenuButton(
+              itemBuilder: (BuildContext context) {
+                return MenuItems.choices.map((String choice) {
+                  return PopupMenuItem(
+                    child: Text(choice),
+                    value: choice,
+                  );
+                }).toList();
+              },
+              onSelected: choiceAction,
+            )
         ],
       ),
-      body:hasFullArticle ? _buildWebView() : _buildArticleDetails(),
+      body: hasFullArticle ? _buildWebView() : _buildArticleDetails(),
     );
   }
+
   Widget _buildWebView() {
     return IndexedStack(
       index: position,
-      children: [ WebViewWidget(controller: _controller,
-      ),
+      children: [
+        WebViewWidget(
+          controller: _controller,
+        ),
         Container(
           child: Center(
             child: SpinKitCubeGrid(
@@ -174,7 +177,6 @@ class _ArticleScreenState extends State<ArticleScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Network Image
           CachedNetworkImage(
             imageUrl: widget.article.image,
             placeholder: (context, url) => CircularProgressIndicator(),
@@ -184,8 +186,6 @@ class _ArticleScreenState extends State<ArticleScreen> {
             fit: BoxFit.cover,
           ),
           SizedBox(height: 16.0),
-
-          // Country Name
           Text(
             widget.article.country.map((index) {
               return Contries[int.parse(index)];
@@ -193,8 +193,6 @@ class _ArticleScreenState extends State<ArticleScreen> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8.0),
-
-          // Dates
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -209,15 +207,34 @@ class _ArticleScreenState extends State<ArticleScreen> {
             ],
           ),
           SizedBox(height: 16.0),
-
-          // Article Description
           Text(
             widget.article.content,
             style: TextStyle(fontSize: 16),
           ),
+          SizedBox(height: 16.0),
+          if (widget.article.applyURL.isNotEmpty)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    launchURL(widget.article.applyURL);
+                  },
+                  child: Text("            Apply            "),
+                ),
+              ],
+            ),
         ],
       ),
     );
+  }
+
+  void launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   void choiceAction(String choice) {

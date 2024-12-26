@@ -19,13 +19,11 @@ class _VideoSplashScreenState extends State<VideoSplashScreen> {
 
     _timer = Timer(Duration(seconds: 4), _navigateToHome);
   }
-
   void _initializeVideoPlayer() {
     _videoPlayerController = VideoPlayerController.asset('assets/logo.mp4');
 
     _videoPlayerController.initialize().then((_) {
-      setState(() {});
-      Future.delayed(Duration(milliseconds: 100), () {
+      setState(() {
         _videoPlayerController.play();
       });
 
@@ -39,10 +37,17 @@ class _VideoSplashScreenState extends State<VideoSplashScreen> {
         }
       });
     }).catchError((error) {
-      // If there's an error initializing the video, move to HomeScreen
-      print("Error loading video: $error");
+      // Handle initialization error
+      print("Error loading video: ${error.toString()}");
       _navigateToHome();
     });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _videoPlayerController.dispose();
+    super.dispose();
   }
 
   void _navigateToHome() {
@@ -54,12 +59,6 @@ class _VideoSplashScreenState extends State<VideoSplashScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    _videoPlayerController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

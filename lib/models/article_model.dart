@@ -7,6 +7,7 @@ class ArticleModel {
   DateTime publishedDate;
   DateTime lastApplyDate;
   String fullArticle;
+  String applyURL;
 
   ArticleModel(
       {required this.content,
@@ -14,7 +15,7 @@ class ArticleModel {
       required this.country,
       required this.image,
       required this.type,
-      required this.lastApplyDate,
+      required this.lastApplyDate,required this.applyURL,
       required this.publishedDate,
       required this.title});
 }

@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
    <application
-        android:label="Scholarship News"
+        android:label="All Abroad Scholarships"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
